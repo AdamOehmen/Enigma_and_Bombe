@@ -11,7 +11,7 @@ char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 char numToLetter(int num) {
 	try {
 		if (num >= 0 && num <= 25) {
-			// grab the corresponding letter from letters[]
+			// grab the corresponding letter from letters[] and return
 			return letters[num];
 		}
 		else {
@@ -35,9 +35,8 @@ int letterToNum(char letter) {
 		// iterate thru letters array
 		for (int i = 0; i < 25; i++) {
 			if (letter == letters[i]) {
-				// return correct num for the input letter and break
+				// return correct num for the input letter
 				return i;
-				break;
 			}
 		}
 		// throw error if input letter isn't between A-Z
