@@ -13,10 +13,10 @@ int main() //This is the main
 	cout << "What is the message you want to send\n"; //get the massage we want to encode
 	getline(cin,planetext);
 
-	int arry[2] = { 2,7 };
+	int arry[10] = { 2, 7, 10, 5, 16, 20, 22, 12, 6, 23};
 	Plugboard plug{};
 	plug.setPlugPos(arry);
-	plug.getPlugPos();
+	int temp = plug.PlugSwitch(2);
 
 	return 0;
 

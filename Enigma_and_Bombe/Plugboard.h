@@ -18,7 +18,7 @@ public:
 	Plugboard();
 	string encodeMessage(string input_message);
 	void setPlugPos(int PlugPos[]);
-	void getPlugPos();
+	int PlugSwitch(int letter);
 	~Plugboard();
 	
 
