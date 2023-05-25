@@ -1,7 +1,7 @@
 #include "Plugboard.h"
 Plugboard::Plugboard()
 {
-	for (int i = 0; i < 24; i++)
+	for (int i = 0; i < 26; i++)
 	{
 		connections[i] = i;
 	}
