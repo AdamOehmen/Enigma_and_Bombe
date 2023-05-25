@@ -18,12 +18,6 @@ int main() //This is the main
 	plug.setPlugPos(arry);
 	plug.getPlugPos();
 
-	char input_char;
-	cout << "Enter input char: ";
-	cin >> input_char;
-	cout << letterToNum(input_char);
-	
-
 	return 0;
 
 }
