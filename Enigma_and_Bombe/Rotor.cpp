@@ -46,5 +46,5 @@ void Rotor::rotate()
 
 int Rotor::getPos(int input)
 {
-
+	return this->position;
 }

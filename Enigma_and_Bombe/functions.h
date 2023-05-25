@@ -1,25 +1,46 @@
 #ifndef functions
 #define functions
 
+#include <stdio.h>
+
+using std::cout;
+
 char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
-// returns uppercase letter for the input int, where 0 returns A and 25 returns Z
+// returns uppercase letter for the input int (between 0-25, inclusive), where 0 returns A and 25 returns Z
 char numToLetter(int num) {
-	return letters[num];
+	try {
+		if (num >= 0 && num <= 25) {
+			return letters[num];
+		}
+		else {
+			throw (num);
+		}
+	}
+	catch (int wrongNum) {
+		cout << "Error in function numToLetter: Input num (" << wrongNum << ") outside of range 0-25\n";
+	}
+
 }
 
-// returns int for the input letter (case insensitive), where A returns 0 and 25 returns Z
+// returns int for the input letter (A-Z, case insensitive), where A returns 0 and 25 returns Z
 int letterToNum(char letter) {
 	// convert input letter to uppercase
 	letter = toupper(letter);
 
-	// iterate thru letters array
-	for (int i = 0; i < 25; i++) {
-		if (letter == letters[i]) {
-			// return correct num for the input letter and break
-			return i;
-			break;
+	try {
+		// iterate thru letters array
+		for (int i = 0; i < 25; i++) {
+			if (letter == letters[i]) {
+				// return correct num for the input letter and break
+				return i;
+				break;
+			}
 		}
+		throw(letter);
+	}
+	catch (char wrongChar) {
+		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet.";
 	}
 }
 
