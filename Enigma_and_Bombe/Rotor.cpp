@@ -7,19 +7,20 @@ using namespace std;
 Rotor::Rotor()
 {
 	this->position = 0;
+	this->notch = 0;
 }
 
-Rotor::Rotor(int position)
+Rotor::Rotor(int position, int notch)
 {
 	this->position = position;
+	this->notch = notch;
 }
 
-void rotate()
+void Rotor::rotate()
 {
-
 }
 
-int getPos(int input)
+int Rotor::getPos(int input)
 {
 
 }

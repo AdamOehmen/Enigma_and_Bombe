@@ -7,11 +7,12 @@ class Rotor
 {
 private:
 	int position;
+	int notch;
 	vector<int> scramble;
 	Rotor* reference;
 public:
 	Rotor();
-	Rotor(int);
+	Rotor(int, int);
 	void rotate();
 	int getPos(int);
 
