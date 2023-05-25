@@ -18,9 +18,15 @@
     <ClCompile Include="Driver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Plugboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class1.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugboard.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
