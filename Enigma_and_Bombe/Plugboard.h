@@ -23,7 +23,7 @@ public:
 	
 
 protected:
-	int connections[24];
+	int connections[26];
 };
 
 
