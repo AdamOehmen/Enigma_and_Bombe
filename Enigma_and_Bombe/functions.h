@@ -45,7 +45,7 @@ int letterToNum(char letter) {
 	}
 	// print error message
 	catch (char wrongChar) {
-		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet.";
+		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet\n";
 	}
 }
 
