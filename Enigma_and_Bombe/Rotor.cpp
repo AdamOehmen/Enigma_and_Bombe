@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 #include "Rotor.h"
 
@@ -10,14 +11,37 @@ Rotor::Rotor()
 	this->notch = 0;
 }
 
-Rotor::Rotor(int position, int notch)
+Rotor::Rotor(int position, int notch, Rotor* reference)
 {
-	this->position = position;
-	this->notch = notch;
-}
+	if(position >= 0 && position < 26)
+	{
+		this->position = position;
+	}
+	else
+	{
+		cout << "Invalid position value" << endl;
+	}
+	if (notch >= 0 && notch < 26)
+	{
+		this->notch = notch;
+	}
+	else
+	{
+		cout << "Invalid notch value" << endl;
+	}
+	this->reference = reference;
+	}
 
 void Rotor::rotate()
 {
+	if (this->position == 25)
+	{
+		this->position = 0;
+	}
+	else
+	{
+		position++;
+	}
 }
 
 int Rotor::getPos(int input)

@@ -12,7 +12,7 @@ private:
 	Rotor* reference;
 public:
 	Rotor();
-	Rotor(int, int);
+	Rotor(int, int, Rotor*);
 	void rotate();
 	int getPos(int);
 
