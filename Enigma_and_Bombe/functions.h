@@ -11,12 +11,15 @@ char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 char numToLetter(int num) {
 	try {
 		if (num >= 0 && num <= 25) {
+			// grab the corresponding letter from letters[]
 			return letters[num];
 		}
 		else {
+			// throw error if input int isn't within 0-25
 			throw (num);
 		}
 	}
+	// print error message
 	catch (int wrongNum) {
 		cout << "Error in function numToLetter: Input num (" << wrongNum << ") outside of range 0-25\n";
 	}
@@ -37,8 +40,10 @@ int letterToNum(char letter) {
 				break;
 			}
 		}
+		// throw error if input letter isn't between A-Z
 		throw(letter);
 	}
+	// print error message
 	catch (char wrongChar) {
 		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet.";
 	}
