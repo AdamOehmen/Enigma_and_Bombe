@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Plugboard.h"
+#include "functions.h"
 
 
 using namespace std;
