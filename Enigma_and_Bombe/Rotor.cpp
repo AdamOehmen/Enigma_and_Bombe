@@ -44,7 +44,15 @@ void Rotor::rotate()
 	}
 }
 
-int Rotor::getPos(int input)
+int Rotor::getScramblePos(int input)
 {
-	return this->position;
+	if (input >= 0 && input < 26)
+	{
+		return scramble[input];
+	}
+	else
+	{
+		cout << "Invalid position argument for Rotor::getPos" << endl;
+		return -1;
+	}
 }

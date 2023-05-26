@@ -14,6 +14,6 @@ public:
 	Rotor();
 	Rotor(int, int, Rotor*);
 	void rotate();
-	int getPos(int);
+	int getScramblePos(int);
 
 };
