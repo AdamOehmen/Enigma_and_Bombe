@@ -133,6 +133,7 @@
     <ClCompile Include="Rotor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Downloads\catch.hpp" />
     <ClInclude Include="functions.h" />
     <ClInclude Include="Plugboard.h" />
     <ClInclude Include="Reflector.h" />
