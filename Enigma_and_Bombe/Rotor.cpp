@@ -8,22 +8,12 @@ using namespace std;
 // Default Constructor, sets start position and notch to '0' if no values are given
 Rotor::Rotor()
 {
-	this->position = 0;
 	this->notch = 0;
 }
 
-// Overloaded Rotor constructor that sets position, notch, and reference to user specified values.
-Rotor::Rotor(int position, int notch, Rotor* reference)
+// Overloaded Rotor constructor that sets notch, and reference to user specified values.
+Rotor::Rotor(int notch, Rotor* reference)
 {
-	if(position >= 0 && position < 26)
-	{
-		this->position = position;
-	}
-	else
-	{
-		cout << "Invalid position value" << endl;
-		this->position = 0;
-	}
 	if (notch >= 0 && notch < 26)
 	{
 		this->notch = notch;
