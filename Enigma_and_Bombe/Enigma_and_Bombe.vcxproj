@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Downloads\catch.hpp" />
     <ClInclude Include="functions.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="Plugboard.h" />
     <ClInclude Include="Reflector.h" />
     <ClInclude Include="Rotor.h" />

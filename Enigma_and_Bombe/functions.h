@@ -1,9 +1,7 @@
 #ifndef functions
 #define functions
 
-#include <stdio.h>
-
-using std::cout;
+#include "pch.h"
 
 char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 

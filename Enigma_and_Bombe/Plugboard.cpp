@@ -7,12 +7,6 @@ Plugboard::Plugboard()
 	}
 }
 
-string Plugboard::encodeMessage(string input_message)
-{
-	// TODO: everything
-	return "";
-}
-
 void Plugboard::setPlugPos(int PlugPos[])
 {
 	for (int i = 0; i < 10; i+=2)

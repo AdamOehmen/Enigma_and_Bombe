@@ -1,7 +1,6 @@
 #pragma once
 
-#include <iostream>
-using std::cout;
+#include "pch.h"
 
 class Reflector {
 public:

@@ -1,11 +1,9 @@
-#include <iostream>
-#include <string>
+#include "pch.h"
 #include "Plugboard.h"
 #include "functions.h"
 #include "Reflector.h"
 
 
-using namespace std;
 string plaintext;
 
 int main() //This is the main
