@@ -19,9 +19,10 @@ char numToLetter(int num) {
 			throw (num);
 		}
 	}
-	// print error message
+	// print error message, return a blank character
 	catch (int wrongNum) {
 		cout << "Error in function numToLetter: Input num (" << wrongNum << ") outside of range 0-25\n";
+		return ' ';
 	}
 
 }
@@ -42,9 +43,10 @@ int letterToNum(char letter) {
 		// throw error if input letter isn't between A-Z
 		throw(letter);
 	}
-	// print error message
+	// print error message, return 99 (code for a blank space)
 	catch (char wrongChar) {
 		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet\n";
+		return 99;
 	}
 }
 
