@@ -2,6 +2,9 @@
 #define functions
 
 #include "pch.h"
+#include <iostream>
+#include <algorithm>
+using namespace std;
 
 char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
@@ -46,6 +49,12 @@ int letterToNum(char letter) {
 		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet\n";
 		return 99;
 	}
+}
+
+string delSpaces(string str) {  // delete spaces
+	str.erase(remove(str.begin(), str.end(), ' '), str.end());
+
+	return str;
 }
 
 #endif 
