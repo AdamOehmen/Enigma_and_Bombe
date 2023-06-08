@@ -1,4 +1,5 @@
 #include "Plugboard.h"
+// Initializes connection vector 0-25
 Plugboard::Plugboard()
 {
 	for (int i = 0; i < 26; i++)
@@ -6,7 +7,7 @@ Plugboard::Plugboard()
 		connections[i] = i;
 	}
 }
-
+// Sets the plugboard configuration and rewrites connections vector
 void Plugboard::setPlugPos(int PlugPos[])
 {
 	for (int i = 0; i < 10; i+=2)
