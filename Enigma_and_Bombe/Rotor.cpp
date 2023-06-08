@@ -3,8 +3,6 @@
 
 #include "Rotor.h"
 
-using namespace std;
-
 // Default Constructor, sets start position and notch to '0' if no values are given
 Rotor::Rotor()
 {
