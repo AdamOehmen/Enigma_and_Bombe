@@ -20,9 +20,9 @@ namespace EnigmaandBombeTest
 		// Unit Tests for Rotors
 		TEST_METHOD(Testmethod1)
 		{
-			Plugboard pb;
+			Rotor rotor1;
 			//Rotor rotor2(1, &rotor1 );
-			//Assert::AreEqual(rotor1.getNotch(), 0);
+			Assert::AreEqual(rotor1.getNotch(), 0);
 			//Assert::AreEqual(rotor2.getNotch(), 1);
 		}
 		// Unit Tests for Reflector
