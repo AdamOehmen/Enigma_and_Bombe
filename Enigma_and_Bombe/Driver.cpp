@@ -8,9 +8,11 @@ int main() //This is the main
 	
 	cout << "What is the message you want to send\n"; //get the massage we want to encode
 	getline(cin,plaintext);
+	plaintext = delSpaces(plaintext);
 	int messageSize = plaintext.size();
 	vector<int> plainNum(messageSize);
 
+	
 	for (int i = 0; i < messageSize; i++)
 	{
 		plainNum[i] = letterToNum(plaintext[i]);
