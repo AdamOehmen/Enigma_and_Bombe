@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../Enigma_and_Bombe/pch.h"
+#include "../Enigma_and_Bombe/Driver.h"
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace EnigmaandBombeTest
@@ -9,7 +10,7 @@ namespace EnigmaandBombeTest
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(Testmethod1)
 		{
 		}
 	};

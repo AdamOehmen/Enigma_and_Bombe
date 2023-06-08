@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Downloads\catch.hpp" />
+    <ClInclude Include="Driver.h" />
     <ClInclude Include="functions.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Plugboard.h" />

@@ -24,10 +24,7 @@
     <ClCompile Include="Rotor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-	<ClCompile Include="Reflector.cpp">
-	  <Filter>Source Files</Filter>
-	</ClCompile>
-	<ClCompile Include="Test.cpp">
+    <ClCompile Include="Reflector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,7 +41,13 @@
     <ClInclude Include="Reflector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="catch.hpp">
+    <ClInclude Include="..\..\..\..\Downloads\catch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Driver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
