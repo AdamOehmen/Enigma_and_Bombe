@@ -22,7 +22,7 @@ int main() //This is the main
 	int arry[10] = { 2, 7, 10, 5, 16, 20, 22, 12, 6, 23};
 	Plugboard plug{};
 	plug.setPlugPos(arry);
-
+	Reflector reflector;
 
 	int numRotors = 3;
 	Rotor rotors[3] = { Rotor(), Rotor(), Rotor() };
@@ -33,6 +33,14 @@ int main() //This is the main
 		for (int j = 0; j < numRotors; j++) {
 			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
 			cout << "After rotor " << j+1 << ": " << plainNum[i] << endl;
+		}
+
+		plainNum[i] = reflector.reflect(plainNum[i]);
+		cout << "After reflector: " << plainNum[i] << endl;
+
+		for (int j = numRotors - 1; j >= 0; j--) {
+			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
+			cout << "After rotor " << j + 1 << ": " << plainNum[i] << endl;
 		}
 
 		cout << "ROTATE ROTOR 1" << endl;
