@@ -18,20 +18,39 @@ namespace EnigmaandBombeTest
 	{
 	public:
 		// Unit Tests for Rotors
-		TEST_METHOD(Testmethod1)
+		Rotor rotor1;
+		TEST_METHOD(TestNotch)
 		{
-			Rotor rotor1;
-			//Rotor rotor2(1, &rotor1 );
 			Assert::AreEqual(rotor1.getNotch(), 0);
-			//Assert::AreEqual(rotor2.getNotch(), 1);
 		}
-		// Unit Tests for Reflector
-		TEST_METHOD(Testmethod2)
+
+		TEST_METHOD(TestNotch2)
 		{
+			Rotor rotor2(5, &rotor1);
+			Assert::AreEqual(rotor2.getNotch(), 5);
+
+
 		}
-		// Unit Tests for Plugboard
-		TEST_METHOD(Testmethod3)
+		//TEST_METHOD(TestReference)
+		//{
+		//	Rotor rotor3(5, &rotor1);
+		//	Assert::AreSame(rotor3.getReference(), &rotor1);
+		//}
+
+		TEST_METHOD(TestPosition)
 		{
+			Assert::AreEqual(rotor1.getPosition(), 0);
+		}
+
+		TEST_METHOD(TestGetScramblePos)
+		{
+			Assert::AreEqual(rotor1.getScramblePos(0), 20);
+		}
+
+		TEST_METHOD(TestRotate)
+		{
+			rotor1.rotate();
+			Assert::AreEqual(rotor1.getPosition(), 1);
 		}
 	};
 }
