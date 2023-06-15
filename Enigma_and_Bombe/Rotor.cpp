@@ -12,34 +12,24 @@ Rotor::Rotor()
 }
 
 // Overloaded Rotor constructor that sets notch, and reference to user specified values.
-Rotor::Rotor(int notch, Rotor* reference)
-{
-	if (notch >= 0 && notch < 26)
-	{
-		this->notch = notch;
-	}
-	else
-	{
-		cout << "Invalid notch value" << endl;
-		this->notch = 0;
-	}
-	this->reference = reference;
-	}
-
-int Rotor::getPosition()
-{
-	return this->position;
-}
+//Rotor::Rotor(int notch, Rotor* reference)
+//{
+//	if (notch >= 0 && notch < 26)
+//	{
+//		this->notch = notch;
+//	}
+//	else
+//	{
+//		cout << "Invalid notch value" << endl;
+//		this->notch = 0;
+//	}
+//	//this->reference = reference;
+//	}
 
 // Returns notch position
 int Rotor::getNotch() 
 {
 	return this->notch;
-}
-
-Rotor* Rotor::getReference()
-{
-	return this->reference; 
 }
 
 // Simulates a rotation of the Rotor by incrementing its position 
