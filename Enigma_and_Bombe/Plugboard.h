@@ -10,6 +10,7 @@ public:
 	Plugboard();
 	void setPlugPos(int PlugPos[]);
 	int PlugSwitch(int letter);
+	int* getConnections();
 	~Plugboard();
 	
 

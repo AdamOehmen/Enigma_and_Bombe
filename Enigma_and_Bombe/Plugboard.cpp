@@ -19,6 +19,9 @@ void Plugboard::setPlugPos(int PlugPos[])
 	}
 }
 
+int* Plugboard::getConnections() {
+	return connections;
+}
 
 int Plugboard::PlugSwitch(int letter)
 {
