@@ -52,5 +52,10 @@ namespace EnigmaandBombeTest
 			rotor1.rotate();
 			Assert::AreEqual(rotor1.getPosition(), 1);
 		}
+
+		TEST_METHOD(TestGetScramblePosAfterRotate)
+		{
+			Assert::AreEqual(rotor1.getScramblePos(0), 13);
+		}
 	};
 }
