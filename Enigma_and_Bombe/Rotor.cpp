@@ -53,13 +53,17 @@ int Rotor::getScramblePos(int input)
 {
 	if (input >= 0 && input < 26)
 	{
-		return scramble[input];
+		return scramble[(input + position) % 26];
 	}
 	else
 	{
 		cout << "Invalid position argument for Rotor::getPos" << endl;
 		return -1;
 	}
+}
+
+int Rotor::getPos() {
+	return this->position;
 }
 
 Rotor::~Rotor()
