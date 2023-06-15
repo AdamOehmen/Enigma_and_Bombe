@@ -11,8 +11,10 @@ private:
 	Rotor* reference; // A reference Rotor. Will use its notch value to determine when to rotate
 public:
 	Rotor();
-	//Rotor(int, Rotor*);
+	Rotor(int, Rotor*);
+	int getPosition();
 	int getNotch();
+	Rotor* getReference();
 	void rotate();
 	int getScramblePos(int);
 	int getPos();
