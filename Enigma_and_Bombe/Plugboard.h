@@ -3,12 +3,14 @@
 
 #include "pch.h"
 
+
 class Plugboard 
 {
 
 public:
 	Plugboard();
-	void setPlugPos(int PlugPos[]);
+	void createPlugboard();
+	void setPlugPos();
 	int PlugSwitch(int letter);
 	~Plugboard();
 	
