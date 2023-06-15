@@ -104,10 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\oehmena\source\repos\Enigma_and_Bombe\Enigma_and_Bombe</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\oehmena\source\repos\Enigma_and_Bombe\Enigma_and_Bombe</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sqlite3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Downloads\catch.hpp" />
+    <ClInclude Include="..\..\..\..\Downloads\sqlite-amalgamation-3420000\sqlite-amalgamation-3420000\sqlite3.h" />
     <ClInclude Include="Driver.h" />
     <ClInclude Include="functions.h" />
     <ClInclude Include="pch.h" />
