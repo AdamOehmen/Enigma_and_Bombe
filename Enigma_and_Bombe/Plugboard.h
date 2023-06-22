@@ -4,7 +4,7 @@
 #include "pch.h"
 
 
-class Plugboard 
+class Plugboard
 {
 
 public:
@@ -15,7 +15,7 @@ public:
 	int test_setPlugPos(int test_swap[26]);
 	int PlugSwitch(int letter);
 	~Plugboard();
-	
+
 
 protected:
 	int connections[26];
