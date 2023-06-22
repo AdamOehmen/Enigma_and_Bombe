@@ -17,7 +17,7 @@ void Plugboard::createPlugboard()
 	for (int i = 0; i < 10; i++)
 	{
 		temp.clear();
-		printf("Plug %d goes from: ", i + 1);
+		printf("Plug %d goes from: ", i+1);
 		getline(cin, temp);
 		if (temp[0] == '-')
 		{
@@ -31,11 +31,11 @@ void Plugboard::createPlugboard()
 		PlugLet[i][1] = toupper(PlugLet[i][1]);
 		for (int k = 0; k < 25; k++) {
 			if (PlugLet[i][0] == let[k]) {
-				//return correct num for the input letter
+				 //return correct num for the input letter
 				PlugPos[i][0] = k;
 			}
 			if (PlugLet[i][1] == let[k]) {
-				//return correct num for the input letter
+				 //return correct num for the input letter
 				PlugPos[i][1] = k;
 			}
 		}
@@ -59,7 +59,7 @@ int Plugboard::test_createPlugboard(int test_pos[10][2], char test_let[10][2])
 			PlugLet[y][x] = toupper(test_let[y][x]);
 		}
 	}
-
+	
 	for (int i = 0; i < 10; i++)
 	{
 		/*

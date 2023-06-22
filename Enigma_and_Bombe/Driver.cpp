@@ -5,8 +5,11 @@ string plaintext;
 
 int main() //This is the main
 {
-	
-	cout << "What is the message you want to send\n"; //get the message we want to encode
+	cout << "Welcome to Enigma" << endl;
+	Plugboard plug{};
+	plug.createPlugboard();
+	plug.setPlugPos();
+	cout << "What is the message you want to send\n"; //get the massage we want to encode
 	getline(cin,plaintext);
 	plaintext = delSpaces(plaintext);  // comment
 	int messageSize = plaintext.size();
@@ -21,9 +24,6 @@ int main() //This is the main
 
 
 	// Create plugboard with 5 hard-coded pairs of numbers
-	int arry[10] = { 2, 7, 10, 5, 16, 20, 22, 12, 6, 23};
-	Plugboard plug{};
-	plug.setPlugPos(arry);
 	Reflector reflector;
 
 	int numRotors = 3;
@@ -33,7 +33,8 @@ int main() //This is the main
 	for (int i = 0; i < numRotors; i++) {
 		rotors.push_back(Rotor());
 	}
-	for (int i = 0; i < messageSize; i++) {
+	for (int i = 0; i < messageSize; i++)
+	{
 		// Send input through plugboard
 		plainNum[i] = plug.PlugSwitch(plainNum[i]);
 		cout << "After plugboard: " << plainNum[i] << endl;;
