@@ -6,12 +6,16 @@ string plaintext;
 int main() //This is the main
 {
 	cout << "Welcome to Enigma" << endl;
+	// Create plugboard with user inputs
 	Plugboard plug{};
 	plug.createPlugboard();
 	plug.setPlugPos();
-	cout << "What is the message you want to send\n"; //get the massage we want to encode
+
+	cout << "What is the message you want to send\n"; //get the message we want to encode
 	getline(cin,plaintext);
-	plaintext = delSpaces(plaintext);  // comment
+	plaintext = delSpaces(plaintext);
+
+	// put input string into array
 	int messageSize = plaintext.size();
 	vector<int> plainNum(messageSize);
 
@@ -23,7 +27,7 @@ int main() //This is the main
 	}
 
 
-	// Create plugboard with 5 hard-coded pairs of numbers
+	// Create reflector with hard-coded values
 	Reflector reflector;
 
 	int numRotors = 3;
