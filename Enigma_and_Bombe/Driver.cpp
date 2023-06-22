@@ -8,6 +8,7 @@ int main() //This is the main
 	cout << "Welcome to Enigma" << endl;
 	Plugboard plug{};
 	plug.createPlugboard();
+	plug.setPlugPos();
 	cout << "What is the message you want to send\n"; //get the massage we want to encode
 	getline(cin,plaintext);
 	plaintext = delSpaces(plaintext);  // comment
@@ -32,12 +33,9 @@ int main() //This is the main
 	for (int i = 0; i < numRotors; i++) {
 		rotors.push_back(Rotor());
 	}
-	for (int i = 0; i < messageSize; i++) {
-		// Send input through plugboard
-	
-	plug.setPlugPos();
 	for (int i = 0; i < messageSize; i++)
 	{
+		// Send input through plugboard
 		plainNum[i] = plug.PlugSwitch(plainNum[i]);
 		cout << "After plugboard: " << plainNum[i] << endl;;
 
