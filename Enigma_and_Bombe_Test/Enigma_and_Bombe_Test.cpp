@@ -38,10 +38,12 @@ namespace EnigmaandBombeTest
 	TEST_CLASS(Reflector_test)
 	{
 	public:
-		// Unit Tests for Plugboard
-		TEST_METHOD(Testmethod1)
+		// Unit Tests for Reflector
+		TEST_METHOD(ReflectTest)
 		{
-
+			Reflector r1;
+			int reflect_Value = r1.reflect(3);
+			Assert::AreEqual(reflect_Value, 13);
 		}
 
 		TEST_METHOD(Testmethod2)
