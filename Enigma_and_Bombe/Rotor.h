@@ -17,6 +17,7 @@ public:
 	Rotor* getReference();
 	void rotate();
 	int getScramblePos(int);
+	int getReversePos(int);
 	int getPos();
 	~Rotor();
 };
