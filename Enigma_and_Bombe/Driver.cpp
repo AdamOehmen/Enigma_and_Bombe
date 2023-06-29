@@ -5,6 +5,7 @@ string plaintext;
 int msg_order = 1;
 int plug_name = 1;
 int rotor_name = 1;
+int rotor_usr, plug_usr;
 
 static int callback(void* data, int argc, char** argv, char** azColName)
 {
@@ -19,6 +20,9 @@ static int callback(void* data, int argc, char** argv, char** azColName)
 
 	return 0;
 }
+/*
+Have something to pull from data to see which message order we currently are on
+*/
 static void db_store(string tbl) {
 	sqlite3* db;
 	int exit = 0;
@@ -31,15 +35,16 @@ static void db_store(string tbl) {
 		cout << "open success" << endl;
 	}
 	if (tbl == "Past_Messages") {
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', 'placeholder'); ";	// construct query using user input, will replace placeholder with actual encrypted msg
+		int rotor_used, plug_used;
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', 'placeholder', " + to_string(rotor_usr) + ", " + to_string(plug_usr)+ "); ";	// construct query using user input, will replace placeholder with actual encrypted msg
 		msg_order++; // update msg order 
 	}
 	else if (tbl == "Plugboard_Settings") {
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(plug_name) + ", 'placeholder plug setting'); ";	// construct query using user input, will replace placeholder with actual setting
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(plug_name) + ", 'ABCD'); ";	// construct query using user input, will replace placeholder with actual setting
 		plug_name++; // update plug name
 	}
 	else if (tbl == "Rotor_Settings") {
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(rotor_name) + ", 'placeholder rotor setting', 1); ";	// construct query using user input, will replace placeholder with actual setting and notch
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(rotor_name) + ", 1); ";	// construct query using user input, will replace placeholder with actual setting and notch
 		rotor_name++; // update rotor name 
 	}
 	cout << query << endl;
@@ -62,6 +67,10 @@ int main() //This is the main
 	plaintext = delSpaces(plaintext);  // delete spaces of msg
 	int messageSize = plaintext.size();  // get size of msg
 	vector<int> plainNum(messageSize);  // create vector to hold msg
+	cout << "What Rotor Setting would you like to use?" << endl;
+	cin >> rotor_usr;
+	cout << "What Plugboard Setting would you like to use?" << endl;
+	cin >> plug_usr;
 	// insert msg into database of past messages
 	db_store("Past_Messages");
 	// insert plugboard setting into database of plugboard settings
