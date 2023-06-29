@@ -55,7 +55,7 @@ int main() //This is the main
 
 		// Send reflector back through each rotor, in reverse sequential order
 		for (int j = numRotors - 1; j >= 0; j--) {
-			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
+			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
 			cout << "After rotor " << j + 1 << ": " << plainNum[i] << endl;
 		}
 
