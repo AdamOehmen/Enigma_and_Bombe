@@ -1,7 +1,7 @@
 #include "Driver.h"
 
 
-string plaintext;
+string plaintext, encrypted_msg;
 sqlite3* db;
 
 int msg_order;
@@ -59,7 +59,7 @@ static void db_store(string tbl) {
 	if (tbl == "Past_Messages") {
 		int rotor_used, plug_used;
 		last_msg();	// grab the last message order
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', 'placeholder', "
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', '" + encrypted_msg + "', "
 			+ to_string(rotor_usr) + ", " + to_string(plug_usr) + "); ";	// construct query using user input, will replace placeholder with actual encrypted msg
 	}
 	else if (tbl == "Plugboard_Settings") {
@@ -282,10 +282,12 @@ int main() //This is the main
 	// Print the final encrypted message
 	cout << "Final encrypted message: ";
 	for (int i = 0; i < plainNum.size(); i++) {
-		cout << numToLetter(plainNum[i]);
+		encrypted_msg = encrypted_msg + numToLetter(plainNum[i]);
 	}
 
-	cout << endl;
+	cout << encrypted_msg << endl;
+
+	db_store("Past_Messages");
 
 	return 0;
 
