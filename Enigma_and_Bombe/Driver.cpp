@@ -11,7 +11,7 @@ int main() //This is the main
 	plug.createPlugboard();
 	plug.setPlugPos();
 
-	cout << "What is the message you want to send\n"; //get the message we want to encode
+	cout << "What is the message you want to send?\n"; //get the message we want to encode
 	getline(cin,plaintext);
 	plaintext = delSpaces(plaintext);
 
@@ -39,33 +39,30 @@ int main() //This is the main
 	}
 	for (int i = 0; i < messageSize; i++)
 	{
-		cout << "Starting num: " << plainNum[i] << endl;
+		cout << "Starting letter: " << numToLetter(plainNum[i]) << endl;
 
 		// Send input through plugboard
 		plainNum[i] = plug.PlugSwitch(plainNum[i]);
-		cout << "After plugboard: " << plainNum[i] << endl;;
 
 		// Send plugboard output through each rotor in sequence
 		for (int j = 0; j < numRotors; j++) {
 			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
-			cout << "After rotor " << j+1 << ": " << plainNum[i] << endl;
 		}
 		
 		// Send output of rotors through reflector
 		plainNum[i] = reflector.reflect(plainNum[i]);
-		cout << "After reflector: " << plainNum[i] << endl;
 
 		// Send reflector back through each rotor, in reverse sequential order
 		for (int j = numRotors - 1; j >= 0; j--) {
 			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
-			cout << "After rotor " << j + 1 << ": " << plainNum[i] << endl;
 		}
+
+		cout << "Encrypted letter: " << numToLetter(plainNum[i]) << endl << endl;
 
 		// Rotate rotor #1 after every encrypted input
 		rotors[0].rotate();
-		cout << "ROTATE ROTOR 1" << endl;
+		cout << "ROTATE ROTOR 1" << endl << endl;
 
-		
 		bool lastRotated = true;
 		for (int k = 1; k < numRotors; k++) {
 			// Rotate the next rotor IF the notch of the previous matches the current position, AND the previous just rotated
@@ -79,9 +76,14 @@ int main() //This is the main
 				lastRotated = false;
 			}
 		}
-		// Print final letter to screen
-		cout << "Final Result: " << numToLetter(plainNum[i]) << endl;
 	}
+
+	cout << "Final encrypted message: ";
+	for (int i = 0; i < plainNum.size(); i++) {
+		cout << numToLetter(plainNum[i]);
+	}
+
+	cout << endl;
 
 	return 0;
 

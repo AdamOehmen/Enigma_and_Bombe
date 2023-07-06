@@ -42,30 +42,26 @@ int main() {
 
 	for (int i = 0; i < messageSize; i++)
 	{
-		cout << "Starting num: " << plainNum[i] << endl;
+		cout << "Encrypted letter: " << numToLetter(plainNum[i]) << endl;
 
 		// Send input through each rotor in sequence
 		for (int j = 0; j < numRotors; j++) {
 			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
-			cout << "After rotor " << j + 1 << ": " << plainNum[i] << endl;
 		}
 
 		// Send output of rotors through reflector
 		plainNum[i] = reflector.reflect(plainNum[i]);
-		cout << "After reflector: " << plainNum[i] << endl;
 
 		// Send reflector through each rotor, in reverse sequential order
 		for (int j = numRotors - 1; j >= 0; j--) {
 			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
-			cout << "After rotor " << j + 1 << ": " << plainNum[i] << endl;
 		}
 
 		// Send through plugboard
 		plainNum[i] = plug.PlugSwitch(plainNum[i]);
-		cout << "After plugboard: " << plainNum[i] << endl;
 
 		// Print final letter to screen
-		cout << "Final Result: " << numToLetter(plainNum[i]) << endl;
+		cout << "Unencrypted letter: " << numToLetter(plainNum[i]) << endl << endl;
 
 		// Rotate rotor #1 after every encrypted input
 		rotors[0].rotate();
@@ -84,11 +80,12 @@ int main() {
 				lastRotated = false;
 			}
 		}
-		
-		for (int i = 0; i < numRotors; i++) {
-			cout << "Rotor " << i + 1 << " pos = " << rotors[i].getPos() << endl;
-		}
 		cout << endl;
+	}
+
+	cout << "Final decrypted message: ";
+	for (int i = 0; i < plainNum.size(); i++) {
+		cout << numToLetter(plainNum[i]);
 	}
 
 	return 0;
