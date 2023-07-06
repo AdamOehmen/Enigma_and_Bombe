@@ -23,63 +23,7 @@ static int callback(void* data, int argc, char** argv, char** azColName)
 	return 0;
 }
 
-static int login(string usr, string pwd) {
-	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
-	if (exit != SQLITE_OK) {	// check if database is opened
-		cout << "error" << endl;
-	}
-	else {
-		cout << "open success" << endl;
-	}
-	string query = "SELECT 1 FROM Login WHERE Username = '" + usr + "';";	// SQL statement selecting 1 and inserting into result set if username is found else select 0
-	sqlite3_stmt* stmt;
-	int result;
-	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
-	if (rc != SQLITE_OK) {
-		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
-		return 0;
-	}
-	rc = sqlite3_step(stmt); // Execute the statement
-	if (rc != SQLITE_ROW) {
-		cout << "Incorrect Username or Password" << endl;
-		return 0;
-	}
 
-	int count = sqlite3_column_int(stmt, 0); // Get the count from the result set
-	if (count > 0) {
-		sqlite3_finalize(stmt); // Finalize the statement
-	}
-	else {
-		cout << "Incorrect Username or Password" << endl;
-		return 0;
-	}
-
-	query = ("SELECT 1 FROM Login WHERE Password = '" + pwd + "';");	// SQL statement selecting 1 and inserting into result set if password is found else select 0
-
-	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
-	if (rc != SQLITE_OK) {
-		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
-		return 0;
-	}
-	rc = sqlite3_step(stmt); // Execute the statement
-	if (rc != SQLITE_ROW) {
-		cout << "Incorrect Username or Password" << endl;
-		return 0;
-	}
-
-	count = sqlite3_column_int(stmt, 0); // Get the count from the result set
-	if (count > 0) {
-		cout << "Welcome to Enigma!" << endl;
-		sqlite3_finalize(stmt); // Finalize the statement
-		sqlite3_close(db);	// close database 
-		return 1;
-	}
-	else {
-		cout << "Incorrect Username or Password" << endl;
-		return 0;
-	}
-
-}
 static void last_msg() {
 	string query;
 	sqlite3_stmt* stmt;
@@ -262,14 +206,7 @@ int main() //This is the main
 	string sql3;
 	string usr_username;
 	string usr_password;
-	// Login into Enigma
-	cout << "-------------Please login to Enigma-------------" << endl;
-	cout << "Username: ";	cin >> usr_username;
-	cout << "Password: ";	cin >> usr_password;
-	cin.ignore();	// clear queue
-	if (login(usr_username, usr_password) == 0) {
-		return 0;
-	}
+	cout << "Welcome to Enigma!" << endl;
 	// Create plugboard with user inputs
 	Plugboard plug{};
 	plug.createPlugboard();
