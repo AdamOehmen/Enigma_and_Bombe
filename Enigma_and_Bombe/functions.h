@@ -35,7 +35,7 @@ int letterToNum(char letter) {
 
 	try {
 		// iterate thru letters array
-		for (int i = 0; i < 25; i++) {
+		for (int i = 0; i <= 25; i++) {
 			if (letter == letters[i]) {
 				// return correct num for the input letter
 				return i;

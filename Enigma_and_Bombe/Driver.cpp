@@ -1,7 +1,7 @@
 #include "Driver.h"
 
 
-string plaintext;
+string plaintext, encrypted_msg;
 sqlite3* db;
 
 int msg_order;
@@ -59,7 +59,7 @@ static void db_store(string tbl) {
 	if (tbl == "Past_Messages") {
 		int rotor_used, plug_used;
 		last_msg();	// grab the last message order
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', 'placeholder', "
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', '" + encrypted_msg + "', "
 			+ to_string(rotor_usr) + ", " + to_string(plug_usr) + "); ";	// construct query using user input, will replace placeholder with actual encrypted msg
 	}
 	else if (tbl == "Plugboard_Settings") {
@@ -212,7 +212,7 @@ int main() //This is the main
 	plug.createPlugboard();
 	plug.setPlugPos();
 
-	cout << "What is the message you want to send\n"; //get the message we want to encode
+	cout << "What is the message you want to send?\n"; //get the message we want to encode
 	getline(cin,plaintext);
 	plaintext = delSpaces(plaintext);
 
@@ -240,31 +240,30 @@ int main() //This is the main
 	}
 	for (int i = 0; i < messageSize; i++)
 	{
+		cout << "Starting letter: " << numToLetter(plainNum[i]) << endl;
+
 		// Send input through plugboard
 		plainNum[i] = plug.PlugSwitch(plainNum[i]);
-		cout << "After plugboard: " << plainNum[i] << endl;;
 
 		// Send plugboard output through each rotor in sequence
 		for (int j = 0; j < numRotors; j++) {
 			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
-			cout << "After rotor " << j+1 << ": " << plainNum[i] << endl;
 		}
 		
 		// Send output of rotors through reflector
 		plainNum[i] = reflector.reflect(plainNum[i]);
-		cout << "After reflector: " << plainNum[i] << endl;
 
-		// Send reflector back through each rotor, in reverse sequential order
+		// Send reflector output back through each rotor, in reverse sequential order
 		for (int j = numRotors - 1; j >= 0; j--) {
 			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
-			cout << "After rotor " << j + 1 << ": " << plainNum[i] << endl;
 		}
 
-		// Rotate rotor #1 after every encrypted input
-		rotors[0].rotate();
-		cout << "ROTATE ROTOR 1" << endl;
+		cout << "Encrypted letter: " << numToLetter(plainNum[i]) << endl << endl;
 
-		
+		// Rotate rotor #1 after every encrypted input letter
+		rotors[0].rotate();
+		cout << "ROTATE ROTOR 1" << endl << endl;
+
 		bool lastRotated = true;
 		for (int k = 1; k < numRotors; k++) {
 			// Rotate the next rotor IF the notch of the previous matches the current position, AND the previous just rotated
@@ -278,9 +277,17 @@ int main() //This is the main
 				lastRotated = false;
 			}
 		}
-		// Print final letter to screen
-		cout << numToLetter(plainNum[i]) << endl;
 	}
+
+	// Print the final encrypted message
+	cout << "Final encrypted message: ";
+	for (int i = 0; i < plainNum.size(); i++) {
+		encrypted_msg = encrypted_msg + numToLetter(plainNum[i]);
+	}
+
+	cout << encrypted_msg << endl;
+
+	db_store("Past_Messages");
 
 	return 0;
 
