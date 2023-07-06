@@ -67,7 +67,7 @@ int Rotor::getScramblePos(int input)
 	}
 	else
 	{
-		cout << "Invalid position argument for Rotor::getPos" << endl;
+		cout << "Invalid position argument for Rotor::getScramblePos" << endl;
 		return -1;
 	}
 }
@@ -77,10 +77,11 @@ int Rotor::getReversePos(int input)
 {
 	if (input >= 0 && input < 26)
 	{
+		// (input + position) % 26 simulates the rotations
+		int newInput = (input + this->position) % 26;
 		// Check all positions on the rotor
-		for (int i = 0; i < 25; i++) {
-			// (input - position) % 26 simulates the rotations
-			if (scramble[i] == ((input - position) % 26)) {
+		for (int i = 0; i <= 25; i++) {
+			if (scramble[i] == newInput) {
 				return i;
 			}
 		}

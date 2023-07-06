@@ -39,6 +39,8 @@ int main() //This is the main
 	}
 	for (int i = 0; i < messageSize; i++)
 	{
+		cout << "Starting num: " << plainNum[i] << endl;
+
 		// Send input through plugboard
 		plainNum[i] = plug.PlugSwitch(plainNum[i]);
 		cout << "After plugboard: " << plainNum[i] << endl;;
@@ -78,7 +80,7 @@ int main() //This is the main
 			}
 		}
 		// Print final letter to screen
-		cout << numToLetter(plainNum[i]) << endl;
+		cout << "Final Result: " << numToLetter(plainNum[i]) << endl;
 	}
 
 	return 0;
