@@ -1,5 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Driver.h"
 #include "sqlite3.h"
+
 
 string plaintext;
 sqlite3* db;
@@ -169,7 +171,7 @@ int* pull_msg_settings(string encrypt) {
 	}
 
 }
-void pull_plug_set(int plug) {
+string pull_plug_set(int plug) {
 	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
 	if (exit != SQLITE_OK) {	// check if database is opened
 		cout << "error" << endl;
@@ -177,31 +179,83 @@ void pull_plug_set(int plug) {
 	else {
 		cout << "open success" << endl;
 	}
-	string query = "SELECT 1 FROM Login WHERE Username = '" + usr + "';";	// SQL statement selecting 1 and inserting into result set if username is found else select 0
+	string query = "SELECT plugSettings FROM Plugboard_Settings WHERE plugName = " + to_string(plug) + ";";	// SQL statement selecting plugboard setting
 	sqlite3_stmt* stmt;
-	int result;
 	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
 	if (rc != SQLITE_OK) {
-		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
-		return 0;
+		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;	// Check if statement is prepared correctly
 	}
 	rc = sqlite3_step(stmt); // Execute the statement
 	if (rc != SQLITE_ROW) {
-		cout << "Incorrect Username or Password" << endl;
-		return 0;
+		cout << "Plugboard Doesn't exist" << endl;	// Check if plugboard exists
 	}
+	size_t length = strlen(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));  // calculate the length using reinterpret_cast since strlen expects a string
+	int size = length * sizeof(unsigned char);  // calculate the total size
 
-	int count = sqlite3_column_int(stmt, 0); // Get the count from the result set
-	if (count > 0) {
-		sqlite3_finalize(stmt); // Finalize the statement
+	string result = "";
+	for (int i = 0; i < size; i++) {
+		char temp = sqlite3_column_text(stmt, 0)[i];	// temp char set to each index of char array
+		result = result + temp;	// append temp to resulting string
+	}
+	sqlite3_finalize(stmt); // Finalize the statement
+	sqlite3_close(db);	// close db
+	return result;
+
+}
+string pull_rotor_set(int rotor) {
+	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
+	if (exit != SQLITE_OK) {	// check if database is opened
+		cout << "error" << endl;
 	}
 	else {
-		cout << "Incorrect Username or Password" << endl;
-		return 0;
+		cout << "open success" << endl;
 	}
-}
-void pull_rotor_set(int rotor) {
+	string query = "SELECT rotorSetting FROM Rotor_Settings WHERE rotorName = " + to_string(rotor) + ";";	// SQL statement selecting rotor setting
+	sqlite3_stmt* stmt;
+	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;	// Check if statement is prepared correctly
+	}
+	rc = sqlite3_step(stmt); // Execute the statement
+	if (rc != SQLITE_ROW) {
+		cout << "Rotor Doesn't exist" << endl;	// Check if plugboard exists
+	}
 
+	size_t length = strlen(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));  // calculate the length using reinterpret_cast since strlen expects a string
+	int size = length * sizeof(unsigned char);  // calculate the total size
+
+	string result = "";
+	for (int i = 0; i < size; i++) {
+		char temp = sqlite3_column_text(stmt, 0)[i];	// temp char set to each index of char array
+		result = result + temp;	// append temp to resulting string
+	}
+	sqlite3_finalize(stmt); // Finalize the statement
+	sqlite3_close(db);	// close db
+	return result;
+}
+int pull_rotor_notch(int rotor) {
+	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
+	if (exit != SQLITE_OK) {	// check if database is opened
+		cout << "error" << endl;
+	}
+	else {
+		cout << "open success" << endl;
+	}
+	string query = "SELECT notch FROM Rotor_Settings WHERE rotorName = " + to_string(rotor) + ";";	// SQL statement selecting rotor setting
+	sqlite3_stmt* stmt;
+	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;	// Check if statement is prepared correctly
+	}
+	rc = sqlite3_step(stmt); // Execute the statement
+	if (rc != SQLITE_ROW) {
+		cout << "Rotor Doesn't exist" << endl;	// Check if plugboard exists
+	}
+
+	int result = sqlite3_column_int(stmt, 0);	// save notch value into result
+	sqlite3_finalize(stmt); // Finalize the statement
+	sqlite3_close(db);	// close db
+	return result;
 }
 
 int main() //This is the main
@@ -239,6 +293,9 @@ int main() //This is the main
 	int rotorSet = arr[1];	// dereference ptr
 	cout << "Plug Setting is " << plugSet << endl;
 	cout << "Rotor Setting is " << rotorSet << endl;
+	cout << "The Current Plugboard is Set to " << pull_plug_set(plugSet) << endl;
+	cout << "The Current Rotor is Set to " << pull_rotor_set(rotorSet) << endl;
+	cout << "The Current Rotor Notch is Set to " << to_string(pull_rotor_notch(rotorSet)) << endl;
 	/*
 	if (sqlite3_open("enigma_bombe.db", &db) == SQLITE_OK)
 	{
