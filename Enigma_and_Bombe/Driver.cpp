@@ -52,14 +52,14 @@ int main() //This is the main
 		// Send output of rotors through reflector
 		plainNum[i] = reflector.reflect(plainNum[i]);
 
-		// Send reflector back through each rotor, in reverse sequential order
+		// Send reflector output back through each rotor, in reverse sequential order
 		for (int j = numRotors - 1; j >= 0; j--) {
 			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
 		}
 
 		cout << "Encrypted letter: " << numToLetter(plainNum[i]) << endl << endl;
 
-		// Rotate rotor #1 after every encrypted input
+		// Rotate rotor #1 after every encrypted input letter
 		rotors[0].rotate();
 		cout << "ROTATE ROTOR 1" << endl << endl;
 
@@ -78,6 +78,7 @@ int main() //This is the main
 		}
 	}
 
+	// Print the final encrypted message
 	cout << "Final encrypted message: ";
 	for (int i = 0; i < plainNum.size(); i++) {
 		cout << numToLetter(plainNum[i]);

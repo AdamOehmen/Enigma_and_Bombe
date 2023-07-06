@@ -27,7 +27,6 @@ int main() {
 	{
 		plainNum[i] = letterToNum(encodedMessage[i]);
 	}
-
 	
 	// Create reflector with hardcoded values
 	Reflector reflector;
@@ -49,10 +48,10 @@ int main() {
 			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
 		}
 
-		// Send output of rotors through reflector
+		// Send output of first pass thru rotors through reflector
 		plainNum[i] = reflector.reflect(plainNum[i]);
 
-		// Send reflector through each rotor, in reverse sequential order
+		// Send reflector output through each rotor, in reverse sequential order
 		for (int j = numRotors - 1; j >= 0; j--) {
 			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
 		}
@@ -63,7 +62,7 @@ int main() {
 		// Print final letter to screen
 		cout << "Unencrypted letter: " << numToLetter(plainNum[i]) << endl << endl;
 
-		// Rotate rotor #1 after every encrypted input
+		// Rotate rotor #1 after every decrypted input letter
 		rotors[0].rotate();
 		cout << "ROTATE ROTOR 1" << endl;
 

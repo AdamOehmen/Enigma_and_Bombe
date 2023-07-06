@@ -64,7 +64,7 @@ int Rotor::getScramblePos(int input)
 	if (input >= 0 && input < 26)
 	{
 		// simulate rotation
-		int newInput = (input + this->position) % 26;
+		int newInput = (input + position) % 26;
 		return scramble[newInput];
 	}
 	else
@@ -83,6 +83,7 @@ int Rotor::getReversePos(int input)
 		// Check all positions on the rotor
 		for (int i = 0; i <= 25; i++) {
 			if (scramble[i] == input) {
+				// calculate rotations by subtracting it from the result, then doing a mod (and if the result of mod is negative, make it positive by cycling back around)
 				int result = (i - position) % 26;
 				if (result < 0) {
 					result += 26;
