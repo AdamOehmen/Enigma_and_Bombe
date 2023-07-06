@@ -137,6 +137,72 @@ static void db_store(string tbl) {
 		sqlite3_close(db);	// close database after writing 
 	}
 }
+int* pull_msg_settings(string encrypt) {
+	int arr[2];
+	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
+	if (exit != SQLITE_OK) {	// check if database is opened
+		cout << "error" << endl;
+	}
+	else {
+		cout << "open success" << endl;
+	}
+	string query = "SELECT plugUsed, rotorUsed FROM Past_Messages WHERE encryptedMsg = '" + encrypt + "';";	// SQL statement selecting the rotorUsed element for the encrypted msg
+	sqlite3_stmt* stmt;
+	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+		return 0;
+	}
+	rc = sqlite3_step(stmt); // Execute the statement
+
+	int count = sqlite3_column_int(stmt, 0); // Get the plugUsed setting and add to resulting array
+	if (count > 0) {
+		arr[0] = count;
+		count = sqlite3_column_int(stmt, 1); // Get the rotorUsed setting and add to resulting array
+		arr[1] = count;
+		sqlite3_finalize(stmt); // Finalize the statement
+		return arr;				// Return pointer to resulting array
+	}
+	else {
+		cout << sqlite3_errmsg(db);
+		return 0;
+	}
+
+}
+void pull_plug_set(int plug) {
+	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
+	if (exit != SQLITE_OK) {	// check if database is opened
+		cout << "error" << endl;
+	}
+	else {
+		cout << "open success" << endl;
+	}
+	string query = "SELECT 1 FROM Login WHERE Username = '" + usr + "';";	// SQL statement selecting 1 and inserting into result set if username is found else select 0
+	sqlite3_stmt* stmt;
+	int result;
+	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
+		return 0;
+	}
+	rc = sqlite3_step(stmt); // Execute the statement
+	if (rc != SQLITE_ROW) {
+		cout << "Incorrect Username or Password" << endl;
+		return 0;
+	}
+
+	int count = sqlite3_column_int(stmt, 0); // Get the count from the result set
+	if (count > 0) {
+		sqlite3_finalize(stmt); // Finalize the statement
+	}
+	else {
+		cout << "Incorrect Username or Password" << endl;
+		return 0;
+	}
+}
+void pull_rotor_set(int rotor) {
+
+}
 
 int main() //This is the main
 {
@@ -168,6 +234,11 @@ int main() //This is the main
 	db_store("Plugboard_Settings");
 	// insert plugboard setting into database of rotor settings
 	db_store("Rotor_Settings");
+	int* arr = pull_msg_settings("ABCD");
+	int plugSet = arr[0];	// dereference ptr
+	int rotorSet = arr[1];	// dereference ptr
+	cout << "Plug Setting is " << plugSet << endl;
+	cout << "Rotor Setting is " << rotorSet << endl;
 	/*
 	if (sqlite3_open("enigma_bombe.db", &db) == SQLITE_OK)
 	{
