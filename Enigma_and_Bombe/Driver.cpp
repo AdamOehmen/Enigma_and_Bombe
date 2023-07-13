@@ -121,7 +121,7 @@ static void db_store(string tbl) {
 		+ to_string(rotor_usr) + ", " + to_string(plug_usr)+ "); ";	// construct query using user input, will replace placeholder with actual encrypted msg
 	}
 	else if (tbl == "Plugboard_Settings") {
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(plug_name) + ", 'ABCD'); ";	// construct query using user input, will replace placeholder with actual setting
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(plug_name) + ", 'a'); ";	// construct query using user input, will replace placeholder with actual setting
 		plug_name++; // update plug name
 	}
 	else if (tbl == "Rotor_Settings") {
