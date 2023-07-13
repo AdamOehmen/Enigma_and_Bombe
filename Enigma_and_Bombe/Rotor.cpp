@@ -16,6 +16,13 @@ Rotor::Rotor()
 
 }
 
+Rotor::Rotor(int newScramble[], int newNotch) {
+	for (int i = 0; i <= 25; i++) {
+		this->scramble[i] = newScramble[i];
+	}
+	this->notch = newNotch;
+}
+
 int Rotor::getPosition()
 {
 	return this->position;

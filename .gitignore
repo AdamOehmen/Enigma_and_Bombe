@@ -365,5 +365,5 @@ FodyWeavers.xsd
 
 #project files
 /Enigma_and_Bombe/Enigma_and_Bombe.vcxproj
-/Bombe/Bombe.vcxproj
 /Enigma_and_Bombe_Test/Enigma_and_Bombe_Test.vcxproj
+/Bombe/Bombe.vcxproj
