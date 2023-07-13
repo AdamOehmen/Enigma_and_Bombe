@@ -2,29 +2,19 @@
 #include <iostream>
 
 #include "Rotor.h"
-
+int lettersToNum(char letter);
+char Alp[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 // Default Constructor, sets start position and notch to '0' 
 // and reference rotor to NULL if no values are given
 Rotor::Rotor()
 {
+	cout << "These are your rotors, would you like to create a new one?";
+	string CLearWhenAddingDataBase;
+	cin >> CLearWhenAddingDataBase;
+	cin.ignore();
 	this->notch = 0;
-	this->reference = NULL;
-}
 
-// Overloaded Rotor constructor that sets notch, and reference to user specified values.
-Rotor::Rotor(int notch, Rotor* reference)
-{
-	if (notch >= 0 && notch < 26)
-	{
-		this->notch = notch;
-	}
-	else
-	{
-		cout << "Invalid notch value" << endl;
-		this->notch = 0;
-	}
-	//this->reference = reference;
-	}
+}
 
 int Rotor::getPosition()
 {
@@ -35,11 +25,6 @@ int Rotor::getPosition()
 int Rotor::getNotch() 
 {
 	return this->notch;
-}
-
-Rotor* Rotor::getReference()
-{
-	return this->reference;
 }
 
 // Simulates a rotation of the Rotor by incrementing its position 
@@ -102,6 +87,78 @@ int Rotor::getPos() {
 	return this->position;
 }
 
+void Rotor::UI_Notch()
+{
+	string temp;
+	cout << "What letter is the notch at: ";
+	getline(cin, temp);
+	char notch_Let = temp[0];
+	notch = lettersToNum(notch_Let);
+	if (notch >= 0 && notch < 26)
+	{
+		this->notch = notch;
+	}
+	else
+	{
+		cout << "Invalid notch value" << endl;
+		this->notch = 0;
+	}
+}
+
+void Rotor::UI_Scramble()
+{
+	for (int i = 0; i < 26; i++)
+	{
+		char ctemp;
+		int itemp, ytemp;
+		string sttemp;
+		cout << Alp[i] << " is link to: ";
+		getline(cin, sttemp);
+		ctemp = sttemp[0];
+		ctemp = toupper(ctemp);
+		itemp = lettersToNum(ctemp);
+		for (int j = 0; j < 26; j++)
+		{
+			if (itemp == scramble[j])
+			{
+				cout << ctemp << " is already attached";
+				i--;
+				break;
+			}
+			if (j == 25)
+			{
+				scramble[i] = itemp;
+			}
+		}
+		//Add stuff for db
+	}
+}
+
+
+
 Rotor::~Rotor()
 {
+}
+
+
+int lettersToNum(char letter) {
+	// convert input letter to uppercase
+	letter = toupper(letter);
+
+	try {
+		// iterate thru letters array
+		for (int i = 0; i <= 25; i++) {
+			if (letter == Alp[i]) {
+				// return correct num for the input letter
+				return i;
+			}
+		}
+		// throw error if input letter isn't between A-Z
+		throw(letter);
+	}
+	// print error message, return 99 (code for a blank space)
+	catch (char wrongChar) {
+		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet\n";
+		return 99;
+	}
 }

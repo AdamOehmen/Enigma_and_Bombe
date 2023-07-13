@@ -212,7 +212,33 @@ int main() //This is the main
 	plug.createPlugboard();
 	plug.setPlugPos();
 
-	cout << "What is the message you want to send?\n"; //get the message we want to encode
+
+
+	// Create reflector with hard-coded values
+	Reflector reflector;
+
+	//Set number of rotors being used
+	int numRotors;
+	cout << "How many rotors would you like to use: ";
+	cin >> numRotors;
+	cin.ignore();
+	// Create a vector with all of the rotors so we can iterate through it
+	// Each has hard-coded values for now
+	vector<Rotor> rotors;
+	for (int i = 0; i < numRotors; i++) {
+		rotors.push_back(Rotor());
+	}
+	for (int i = 0; i < numRotors; i++)
+	{
+		rotors[i].UI_Scramble();
+		rotors[i].UI_Notch();
+		cout << "Rotor " << i + 1 << " is all set";
+	}
+	
+
+
+
+	cout << "What is the message you want to send\n"; //get the message we want to encode
 	getline(cin,plaintext);
 	plaintext = delSpaces(plaintext);
 
@@ -228,16 +254,9 @@ int main() //This is the main
 	}
 
 
-	// Create reflector with hard-coded values
-	Reflector reflector;
+	
 
-	int numRotors = 3;
-	// Create a vector with all of the rotors so we can iterate through it
-	// Each has hard-coded values for now
-	vector<Rotor> rotors;
-	for (int i = 0; i < numRotors; i++) {
-		rotors.push_back(Rotor());
-	}
+	
 	for (int i = 0; i < messageSize; i++)
 	{
 		cout << "Starting letter: " << numToLetter(plainNum[i]) << endl;
