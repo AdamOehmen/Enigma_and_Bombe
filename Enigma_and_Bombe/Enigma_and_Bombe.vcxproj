@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\arpin\OneDrive\Desktop\school\applied prog\enigma\Enigma_and_Bombe</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\arpin\OneDrive\Desktop\school\applied prog\enigma\Enigma_and_Bombe\Enigma_and_Bombe</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\arpin\OneDrive\Desktop\school\applied prog\enigma\Enigma_and_Bombe</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\arpin\OneDrive\Desktop\school\applied prog\enigma\Enigma_and_Bombe\Enigma_and_Bombe</AdditionalLibraryDirectories>
       <AdditionalDependencies>sqlite3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
