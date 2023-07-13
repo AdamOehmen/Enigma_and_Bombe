@@ -199,6 +199,42 @@ int pull_rotor_notch(int rotor) {
 	sqlite3_close(db);	// close db
 	return result;
 }
+void ask_usr_set(int result[10]) {
+	int plugSet;	// Plugboard Setting input
+	int numRotor;   // Number of Rotors input
+	int rotorSet[] = { 0,0,0,0,0,0,0,0 }; // Rotor Settings 
+	/*
+	Final Result Array Stores Following:
+	First number is plug setting
+	Second number is number of rotors
+	Rest of array stores setting of rotors
+	*/
+	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
+	if (exit != SQLITE_OK) {	// check if database is opened
+		cout << "error" << endl;
+	}
+	else {
+		cout << "open success" << endl;
+	}
+	string query = "SELECT * FROM Plugboard_Settings";
+	cout << "What is the Plugboard setting you would like to use?" << endl;
+	sqlite3_exec(db, query.c_str(), callback, NULL, NULL);
+	cout << "Please enter plugName of the setting you want to use: " << endl;
+	cin >> plugSet;
+	result[0] = plugSet;
+	cout << "How many rotors would you like to use?" << endl;
+	cin >> numRotor;
+	result[1] = numRotor;
+	query = "SELECT * FROM Rotor_Settings";
+	sqlite3_exec(db, query.c_str(), callback, NULL, NULL);
+	int temp_set;
+	for (int i = 0; i < numRotor; i++) {
+		cout << "Which Rotor would you like to use for Rotor #" + to_string(i + 1) << endl;
+		cin >> temp_set;
+		rotorSet[i] = temp_set;
+		result[i + 2] = temp_set;
+	}
+}
 
 int main() //This is the main
 {
@@ -206,7 +242,9 @@ int main() //This is the main
 	string sql3;
 	string usr_username;
 	string usr_password;
+	int settings[10];
 	cout << "Welcome to Enigma!" << endl;
+	ask_usr_set(settings);
 	// Create plugboard with user inputs
 	Plugboard plug{};
 	plug.createPlugboard();
