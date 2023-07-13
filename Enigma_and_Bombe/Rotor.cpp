@@ -48,11 +48,13 @@ int Rotor::getScramblePos(int input)
 {
 	if (input >= 0 && input < 26)
 	{
-		return scramble[(input + position) % 26];
+		// simulate rotation
+		int newInput = (input + position) % 26;
+		return scramble[newInput];
 	}
 	else
 	{
-		cout << "Invalid position argument for Rotor::getPos" << endl;
+		cout << "Invalid position argument for Rotor::getScramblePos" << endl;
 		return -1;
 	}
 }
@@ -60,13 +62,18 @@ int Rotor::getScramblePos(int input)
 // Find the position of a value, to work through the rotor backwards
 int Rotor::getReversePos(int input)
 {
+	int result;
 	if (input >= 0 && input < 26)
 	{
 		// Check all positions on the rotor
-		for (int i = 0; i < 25; i++) {
-			// (input - position) % 26 simulates the rotations
-			if (scramble[i] == ((input - position) % 26)) {
-				return i;
+		for (int i = 0; i <= 25; i++) {
+			if (scramble[i] == input) {
+				// calculate rotations by subtracting it from the result, then doing a mod (and if the result of mod is negative, make it positive by cycling back around)
+				int result = (i - position) % 26;
+				if (result < 0) {
+					result += 26;
+				}
+				return result;
 			}
 		}
 	}

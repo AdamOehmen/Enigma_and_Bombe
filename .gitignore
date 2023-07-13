@@ -362,3 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /testEnvironments.json
+
+#project files
+/Enigma_and_Bombe/Enigma_and_Bombe.vcxproj
+/Bombe/Bombe.vcxproj
+/Enigma_and_Bombe_Test/Enigma_and_Bombe_Test.vcxproj
