@@ -29,7 +29,7 @@ void Plugboard::createPlugboard()
 		PlugLet[i][1] = temp[0];
 		PlugLet[i][0] = toupper(PlugLet[i][0]);
 		PlugLet[i][1] = toupper(PlugLet[i][1]);
-		for (int k = 0; k < 25; k++) {
+		for (int k = 0; k <= 25; k++) {
 			if (PlugLet[i][0] == let[k]) {
 				 //return correct num for the input letter
 				PlugPos[i][0] = k;
