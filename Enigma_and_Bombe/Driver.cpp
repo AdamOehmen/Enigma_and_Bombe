@@ -343,7 +343,9 @@ int main() //This is the main
 	}
 
 	cout << encrypted_msg << endl;
-
+	
+	// call last_msg so program knows where to store the encrypted message
+	last_msg();
 	db_store("Past_Messages");
 
 	return 0;
