@@ -123,7 +123,7 @@ int selectMessage() {
 		cout << "No past messages found." << endl;
 	}
 
-	cout << "Past messages:" << endl;
+	cout << "#\tMessage" << endl << "---------------" << endl;
 	vector<int> messages;
 	bool exit = false;
 	do {
@@ -148,11 +148,19 @@ int selectMessage() {
 	do {
 		cout << "Enter the # of the message you'd like to decode: ";
 		cin >> result;
+		if (result < 1) {
+			cout << "Unrecognized input, try again." << endl;
+			cin.clear();
+			cin.ignore(1);
+			result = 0;
+			continue;
+		}
 		if (find(messages.begin(), messages.end(), result) != messages.end()) {
 			exit = true;
 		}
 		else {
 			cout << "Unrecognized message number, please try again." << endl;
+			result = 0;
 		}
 	} while (exit == false);
 
