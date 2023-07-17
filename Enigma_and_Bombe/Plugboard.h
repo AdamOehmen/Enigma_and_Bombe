@@ -1,5 +1,4 @@
-#ifndef Plugboard_H
-#define PlugBoard_H
+#pragma once
 
 #include "pch.h"
 
@@ -20,6 +19,3 @@ public:
 protected:
 	int connections[26];
 };
-
-
-#endif 

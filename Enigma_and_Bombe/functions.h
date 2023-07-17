@@ -1,5 +1,4 @@
-#ifndef functions
-#define functions
+#pragma once
 
 #include "pch.h"
 #include <iostream>
@@ -56,5 +55,3 @@ string delSpaces(string str) {  // delete spaces
 
 	return str;
 }
-
-#endif 

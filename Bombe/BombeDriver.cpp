@@ -3,20 +3,178 @@
 #include "../Enigma_and_Bombe/Plugboard.h"
 #include "../Enigma_and_Bombe/Rotor.h"
 #include "../Enigma_and_Bombe/functions.h"
+#include "../Enigma_and_Bombe/sqlite3.h"
 
+string getRotorsUsed(int msgNum) {
+	sqlite3* db;
+	sqlite3_stmt* stmt;
+	int rc;
+	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	if (rc != SQLITE_OK) {
+		cout << "Error opening db in getMessageRotorSettings" << endl;
+	}
+
+	string query = "SELECT rotorUsed FROM Past_Messages WHERE messageOrder = " + to_string(msgNum);
+	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << query << endl;
+	}
+	
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_ROW) {
+		cout << "No rotor setting found for msg #" << msgNum << endl;
+	}
+
+	string result = "";
+	int length = sqlite3_column_bytes(stmt, 0);
+	for (int i = 0; i < length; i++) {
+		char rotor = sqlite3_column_text(stmt, 0)[i];
+		result = result + rotor;
+	}
+
+	return result;
+}
+
+int getNumRotorsUsed(int msgNum) {
+	string rotorStr = getRotorsUsed(msgNum);
+
+	int count = 0;
+	for (int i = 0; i < rotorStr.length(); i++) {
+		if (rotorStr[i] == ',') {
+			count++;
+		}
+	}
+
+	return count;
+}
+
+int getPlugboardUsed(int msgNum) {
+	sqlite3* db;
+	sqlite3_stmt* stmt;
+	int rc;
+	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	if (rc != SQLITE_OK) {
+		cout << "Error opening db in getMessagePlugboardUsed" << endl;
+	}
+
+	string query = "SELECT plugUsed FROM Past_Messages WHERE messageOrder = " + to_string(msgNum);
+	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << query << endl;
+	}
+
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_ROW) {
+		cout << "No plugboard setting found for msg #" << msgNum << endl;
+	}
+
+	int result = sqlite3_column_int(stmt, 0);
+
+	return result;
+}
+
+string getEncryptedMessage(int msgNum) {
+	sqlite3* db;
+	sqlite3_stmt* stmt;
+	int rc;
+	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	if (rc != SQLITE_OK) {
+		cout << "Error opening db in getEncryptedMessage" << endl;
+	}
+
+	string query = "SELECT encryptedMsg FROM Past_Messages WHERE messageOrder = " + to_string(msgNum);
+	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << query << endl;
+	}
+
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_ROW) {
+		cout << "No message #" << msgNum << " found." << endl;
+	}
+
+	string result = "";
+	int length = sqlite3_column_bytes(stmt, 0);
+	for (int i = 0; i < length; i++) {
+		char nextLetter = sqlite3_column_text(stmt, 0)[i];
+		result = result + nextLetter;
+	}
+
+	return result;
+}
+
+int selectMessage() {
+	sqlite3* db;
+	sqlite3_stmt* stmt;
+	int rc;
+	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	if (rc != SQLITE_OK) {
+		cout << "Error opening db in selectMessage" << endl;
+	}
+
+	string query = "SELECT messageOrder, encryptedMsg FROM Past_Messages";
+	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << query << endl;
+	}
+
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_ROW) {
+		cout << "No past messages found." << endl;
+	}
+
+	cout << "Past messages:" << endl;
+	vector<int> messages;
+	bool exit = false;
+	do {
+		string message = "";
+		int length = sqlite3_column_bytes(stmt, 1);
+		for (int i = 0; i < length; i++) {
+			char nextChar = sqlite3_column_text(stmt, 1)[i];
+			message = message + nextChar;
+		}
+		messages.push_back(sqlite3_column_int(stmt, 0));
+
+		cout << sqlite3_column_int(stmt, 0) << "\t" << message << endl;
+
+		rc = sqlite3_step(stmt);
+		if (rc != SQLITE_ROW) {
+			exit = true;
+		}
+	} while (exit == false);
+
+	int result;
+	exit = false;
+	do {
+		cout << "Enter the # of the message you'd like to decode: ";
+		cin >> result;
+		if (find(messages.begin(), messages.end(), result) != messages.end()) {
+			exit = true;
+		}
+		else {
+			cout << "Unrecognized message number, please try again." << endl;
+		}
+	} while (exit == false);
+
+	cin.clear();
+	cin.ignore(1);
+
+	return result;
+}
 
 int main() {
 	cout << "Welcome to Bombe." << endl;
+
+	int selectedMessage = selectMessage();
+	cout << "Selected message #" << selectedMessage << endl;
+	string encodedMessage = getEncryptedMessage(selectedMessage);
+	encodedMessage = delSpaces(encodedMessage);
+
 	// Create plugboard with user inputs
 	Plugboard plug{};
 	plug.createPlugboard();
 	plug.setPlugPos();
 	
-	// TEMP - eventually will only pull from previousmessages database
-	cout << "What message would you like to decode?" << endl;
-	string encodedMessage;
-	getline(cin, encodedMessage);
-	encodedMessage = delSpaces(encodedMessage);
 
 	// Map encoded message string to a vector
 	int messageSize = encodedMessage.size();
@@ -31,7 +189,7 @@ int main() {
 	// Create reflector with hardcoded values
 	Reflector reflector;
 
-	int numRotors = 3;
+	int numRotors = getNumRotorsUsed(selectedMessage);
 	// Create a vector with all of the rotors so we can iterate through it
 	// Each has hard-coded values for now
 	vector<Rotor> rotors;
