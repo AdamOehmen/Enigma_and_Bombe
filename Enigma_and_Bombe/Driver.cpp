@@ -280,7 +280,7 @@ int main() //This is the main
 	// Ask User whether they would like to use predefined settings or create 
 	// settings for Plugboard and Rotors
 	char usr;
-	cout << "Would you like to create your own settings? (Y/N)" << endl;
+	cout << "Would you like to create your own settings for the Plugboard? (Y/N)" << endl;
 	cin >> usr;
 	Plugboard plug{};
 	if (usr == 'Y') {
