@@ -5,9 +5,10 @@ string plaintext, encrypted_msg;
 sqlite3* db;
 
 int msg_order;
-int plug_name = 1;
-int rotor_name = 1;
+int plug_order;
+int rotor_order;
 int rotor_usr, plug_usr;
+string plug_store;
 
 static int callback(void* data, int argc, char** argv, char** azColName)
 {
@@ -24,11 +25,21 @@ static int callback(void* data, int argc, char** argv, char** azColName)
 }
 
 
-static void last_msg() {
+static void last_msg(string tbl) {
 	string query;
 	sqlite3_stmt* stmt;
+	string order;
 	int exit = 0;
-	query = "SELECT MAX(messageOrder) FROM Past_Messages;";
+	if (tbl == "Past_Messages") {
+		order = "messageOrder";
+	}
+	if (tbl == "Plugboard_Settings") {
+		order = "plugName";
+	}
+	if (tbl == "Rotor_Settings") {
+		order = "rotorName";
+	}
+	query = "SELECT MAX("+ order +") FROM " + tbl + "; ";
 	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
@@ -38,12 +49,32 @@ static void last_msg() {
 		cout << "Statement failed" << endl;
 	}
 	int count = sqlite3_column_int(stmt, 0); // Get the maximum message order from result set
-	if (count >= 0) {
-		sqlite3_finalize(stmt); // Finalize the statement
-		msg_order = count + 1;	// set msg_order as max message order + 1
+	if (tbl == "Past_Messages") {
+		if (count >= 0) {
+			sqlite3_finalize(stmt); // Finalize the statement
+			msg_order = count + 1;	// set msg_order as max message order + 1
+		}
+		else {
+			cout << "No results!" << endl;
+		}
 	}
-	else {
-		cout << "No results!" << endl;
+	if (tbl == "Plugboard_Settings") {
+		if (count >= 0) {
+			sqlite3_finalize(stmt); // Finalize the statement
+			plug_order = count + 1;	// set msg_order as max message order + 1
+		}
+		else {
+			cout << "No results!" << endl;
+		}
+	}
+	if (tbl == "Rotor_Settings") {
+		if (count >= 0) {
+			sqlite3_finalize(stmt); // Finalize the statement
+			rotor_order = count + 1;	// set msg_order as max message order + 1
+		}
+		else {
+			cout << "No results!" << endl;
+		}
 	}
 }
 static void db_store(string tbl) {
@@ -58,17 +89,17 @@ static void db_store(string tbl) {
 	}
 	if (tbl == "Past_Messages") {
 		int rotor_used, plug_used;
-		last_msg();	// grab the last message order
+		last_msg(tbl);	// grab the last message order
 		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', '" + encrypted_msg + "', "
 			+ to_string(rotor_usr) + ", " + to_string(plug_usr) + "); ";	// construct query using user input, will replace placeholder with actual encrypted msg
 	}
 	else if (tbl == "Plugboard_Settings") {
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(plug_name) + ", 'ABCD'); ";	// construct query using user input, will replace placeholder with actual setting
-		plug_name++; // update plug name
+		last_msg(tbl);	// grab the last plug order
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(plug_order) + ", '"+plug_store+"');";	// construct query using user input, will replace placeholder with actual setting
 	}
 	else if (tbl == "Rotor_Settings") {
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(rotor_name) + ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 1); ";	// construct query using user input, will replace placeholder with actual setting and notch
-		rotor_name++; // update rotor name 
+		last_msg(tbl);	// grab the last rotor order
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(rotor_order) + ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 1); ";	// construct query using user input, will replace placeholder with actual setting and notch
 	}
 	cout << query << endl;
 	exit = sqlite3_exec(db, query.c_str(), callback, NULL, NULL);	// execute the query command 
@@ -240,17 +271,46 @@ int main() //This is the main
 {
 	sqlite3_stmt* st;
 	string sql3;
-	string usr_username;
-	string usr_password;
-	int settings[10];
+	int settings[10];	// Settings are stored as follows: #1: Plug Setting ID #2: Number of Rotors #3-10: Rotor ID's 
+	// If Rotor ID is 0, then it doesn't exist
+
 	cout << "Welcome to Enigma!" << endl;
-	ask_usr_set(settings);
-	// Create plugboard with user inputs
+	
+	
+	// Ask User whether they would like to use predefined settings or create 
+	// settings for Plugboard and Rotors
+	char usr;
+	cout << "Would you like to create your own settings? (Y/N)" << endl;
+	cin >> usr;
 	Plugboard plug{};
-	plug.createPlugboard();
-	plug.setPlugPos();
+	if (usr == 'Y') {
+		ask_usr_set(settings);
+		// Extract settings from DB and store into object
+		// Extracting Plugboard Settings and creating plugboard
+		// Start of Plugboard Creation
+		string plugset = pull_plug_set(settings[0]);
+		plug.DB_Extract(plugset);
+		plug.setPlugPos();
+		plug_store = plug.returnPlugLet();
+		// End of Plugboard Creation
+		// Start of Rotor Creation
 
-
+		// End of Rotor Creation
+	}
+	else if (usr == 'N') {
+		/*
+		Create Plugboard and Rotor Settings
+		*/
+		// Create plugboard with user inputs
+		plug.createPlugboard();
+		plug.setPlugPos();
+		plug_store = plug.returnPlugLet();
+		db_store("Plugboard_Settings");
+		// Create Rotors with user inputs 
+		// Reuse Below code
+	}
+	// Place breakpoint here if you want to test above	
+	// When testing Plugboard ensure you have a setting plugSetting entry with 20 characters such as 'ABCDEFGHIJKLMNOPQRSY' 
 
 	// Create reflector with hard-coded values
 	Reflector reflector;
@@ -272,9 +332,6 @@ int main() //This is the main
 		rotors[i].UI_Notch();
 		cout << "Rotor " << i + 1 << " is all set";
 	}
-	
-
-
 
 	cout << "What is the message you want to send\n"; //get the message we want to encode
 	getline(cin,plaintext);
@@ -345,7 +402,6 @@ int main() //This is the main
 	cout << encrypted_msg << endl;
 	
 	// call last_msg so program knows where to store the encrypted message
-	last_msg();
 	db_store("Past_Messages");
 
 	return 0;

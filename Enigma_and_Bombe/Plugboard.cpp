@@ -12,6 +12,37 @@ Plugboard::Plugboard()
 	}
 }
 
+void Plugboard::DB_Extract(string db_setting) {
+	int temp = 0;
+	// Extracts DB settings and stores into PlugLet
+	// Essentially createPlugboard() but pulls data from DB
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 10; j++) {
+			if (i == 0) {
+				PlugLet[j][i] = db_setting[temp];
+				temp = temp + 2;
+			}
+			else if (i == 1) {
+				PlugLet[j][i] = db_setting[temp + 1];
+				temp = temp + 2;
+			}
+		}
+		temp = 0;
+	}
+	// Converts Letters to Num
+	for (int i = 0; i < 10; i++){
+		for (int k = 0; k <= 25; k++) {
+			if (PlugLet[i][0] == let[k]) {
+				//return correct num for the input letter
+				PlugPos[i][0] = k;
+			}
+			if (PlugLet[i][1] == let[k]) {
+				//return correct num for the input letter
+				PlugPos[i][1] = k;
+			}
+		}
+	}
+}
 void Plugboard::createPlugboard()
 {
 	for (int i = 0; i < 10; i++)
@@ -49,6 +80,16 @@ void Plugboard::createPlugboard()
 	}
 	*/
 	cout << "test0";
+}
+
+string Plugboard::returnPlugLet() {
+	string result = "";
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 2; j++) {
+			result = result + PlugLet[i][j];
+		}
+	}
+	return result;
 }
 
 int Plugboard::test_createPlugboard(int test_pos[10][2], char test_let[10][2])
