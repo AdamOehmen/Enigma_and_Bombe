@@ -13,17 +13,20 @@ string getRotorsUsed(int msgNum) {
 	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
 	if (rc != SQLITE_OK) {
 		cout << "Error opening db in getMessageRotorSettings" << endl;
+		exit(0);
 	}
 
 	string query = "SELECT rotorUsed FROM Past_Messages WHERE messageOrder = " + to_string(msgNum);
 	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << query << endl;
+		exit(0);
 	}
 	
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
 		cout << "No rotor setting found for msg #" << msgNum << endl;
+		exit(0);
 	}
 
 	string result = "";
@@ -58,17 +61,20 @@ string getPlugboardUsed(int msgNum) {
 	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
 	if (rc != SQLITE_OK) {
 		cout << "Error opening db in getMessagePlugboardUsed" << endl;
+		exit(0);
 	}
 
 	string query = "SELECT plugUsed FROM Past_Messages WHERE messageOrder = " + to_string(msgNum);
 	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << query << endl;
+		exit(0);
 	}
 
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
 		cout << "No plugboard setting found for msg #" << msgNum << endl;
+		exit(0);
 	}
 
 	int plug = sqlite3_column_int(stmt, 0);
@@ -77,11 +83,13 @@ string getPlugboardUsed(int msgNum) {
 	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << query << endl;
+		exit(0);
 	}
 
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
 		cout << "No plugboard setting found for msg #" << msgNum << endl;
+		exit(0);
 	}
 
 	string result = "";
@@ -106,11 +114,13 @@ string getRotorScramble(int rotorNum) {
 	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << query << endl;
+		exit(0);
 	}
 
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
 		cout << "No rotor setting found for rotor #" << rotorNum << endl;
+		exit(0);
 	}
 
 	string result = "";
@@ -134,11 +144,13 @@ int getRotorNotch(int rotorNum) {
 	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << query << endl;
+		exit(0);
 	}
 
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
 		cout << "No rotor setting found for rotor #" << rotorNum << endl;
+		exit(0);
 	}
 
 	int result = sqlite3_column_int(stmt, 0);
@@ -153,17 +165,20 @@ string getEncryptedMessage(int msgNum) {
 	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
 	if (rc != SQLITE_OK) {
 		cout << "Error opening db in getEncryptedMessage" << endl;
+		exit(0);
 	}
 
 	string query = "SELECT encryptedMsg FROM Past_Messages WHERE messageOrder = " + to_string(msgNum);
 	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << query << endl;
+		exit(0);
 	}
 
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
 		cout << "No message #" << msgNum << " found." << endl;
+		exit(0);
 	}
 
 	string result = "";
@@ -183,12 +198,14 @@ int selectMessage() {
 	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
 	if (rc != SQLITE_OK) {
 		cout << "Error opening db in selectMessage" << endl;
+		exit(0);
 	}
 
 	string query = "SELECT messageOrder, encryptedMsg FROM Past_Messages";
 	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << query << endl;
+		exit(0);
 	}
 
 	rc = sqlite3_step(stmt);
@@ -303,7 +320,6 @@ int main() {
 		// Send input through each rotor in sequence
 		for (int j = 0; j < numRotors; j++) {
 			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
-			cout << "After rotor " << j << ": " << plainNum[i] << endl;
 		}
 
 		// Send output of first pass thru rotors through reflector
@@ -312,7 +328,6 @@ int main() {
 		// Send reflector output through each rotor, in reverse sequential order
 		for (int j = numRotors - 1; j >= 0; j--) {
 			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
-			cout << "After rotor " << j << ": " << plainNum[i] << endl;
 		}
 
 		// Send through plugboard
