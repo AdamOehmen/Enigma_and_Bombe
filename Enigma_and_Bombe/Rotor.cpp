@@ -6,7 +6,6 @@ int lettersToNum(char letter);
 char Alp[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 string query;
 sqlite3* dab;
-int rtrName;
 int YN = 0;
 
 // Default Constructor, sets start position and notch to '0' 
@@ -107,13 +106,13 @@ Rotor::Rotor()
 		if (ClearWhenAddingDataBase == "N")
 		{
 			cout << "Which rotors would you like to use: ";
-			cin >> rtrName;
-			this->scramble = pull_rotor_set(rtrName);
+			cin >> this->rtrName;
+			this->scramble = pull_rotor_set(this->rtrName);
 			for (int i = 0; i < scramble.length(); i++)
 			{
 				this->scramble[i] = lettersToNum(this->scramble[i]);
 			}
-			this->notch = pull_rotor_notch(rtrName);
+			this->notch = pull_rotor_notch(this->rtrName);
 			cout << "Setting is: " << scramble << endl;
 			cout << "Notch is: " << notch<< endl;
 			YN = 0;
@@ -144,7 +143,7 @@ Rotor::Rotor()
 
 int Rotor::getName()
 {
-	return rtrName;
+	return this->rtrName;
 }
 
 // Returns notch position

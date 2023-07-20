@@ -3,7 +3,6 @@
 
 string plaintext, encrypted_msg;
 sqlite3* db;
-
 int msg_order;
 int plug_order;
 int rotor_order, inotch;
@@ -212,8 +211,26 @@ void ask_usr_set(int result[10]) {
 		result[i + 2] = temp_set;
 	}
 }
+int concat(int a, int b)
+{
+
+	// Convert both the integers to string
+	string s1 = to_string(a);
+	string s2 = to_string(b);
+
+	// Concatenate both strings
+	string s = s1 + s2;
+
+	// Convert the concatenated string
+	// to integer
+	int c = stoi(s);
+
+	// return the formed integer
+	return c;
+}
 int main() //This is the main
 {
+	
 	sqlite3_stmt* st;
 	string sql3;
 	string usr_username;
@@ -246,6 +263,12 @@ int main() //This is the main
 			inotch = rotors[i].getNotch();
 			last_msg("Rotor_Settings");
 			db_store("Rotor_Settings");
+			last_msg("Rotor_Settings");	// grab the last rotor order
+			rotor_usr = concat(rotor_usr, rotor_order);
+		}
+		else
+		{
+			rotor_usr = concat(rotor_usr, rotors[i].getName());
 		}
 	}
 	
