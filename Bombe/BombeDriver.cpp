@@ -48,7 +48,7 @@ int getNumRotorsUsed(int msgNum) {
 	return count;
 }
 
-int getPlugboardUsed(int msgNum) {
+string getPlugboardUsed(int msgNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
 	int rc;
@@ -88,9 +88,58 @@ int getPlugboardUsed(int msgNum) {
 		result = result + plug;
 	}
 
-	cout << result;
+	return result;
+}
 
-	return 0;
+string getRotorScramble(int rotorNum) {
+	sqlite3* db;
+	sqlite3_stmt* stmt;
+	int rc;
+	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+
+	string query = "SELECT rotorSetting FROM Rotor_Settings WHERE rotorName = '" + to_string(rotorNum) + "'";
+
+	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << query << endl;
+	}
+
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_ROW) {
+		cout << "No rotor setting found for rotor #" << rotorNum << endl;
+	}
+
+	string result = "";
+	int length = sqlite3_column_bytes(stmt, 0);
+	for (int i = 0; i < length; i++) {
+		char let = sqlite3_column_text(stmt, 0)[i];
+		result = result + let;
+	}
+	
+	return result;
+}
+
+int getRotorNotch(int rotorNum) {
+	sqlite3* db;
+	sqlite3_stmt* stmt;
+	int rc;
+	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+
+	string query = "SELECT notch FROM Rotor_Settings WHERE rotorName = '" + to_string(rotorNum) + "'";
+
+	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << query << endl;
+	}
+
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_ROW) {
+		cout << "No rotor setting found for rotor #" << rotorNum << endl;
+	}
+
+	int result = sqlite3_column_int(stmt, 0);
+
+	return result;
 }
 
 string getEncryptedMessage(int msgNum) {
@@ -141,7 +190,6 @@ int selectMessage() {
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
 		cout << "No past messages found. Run the Enigma program and enter some messages to get started!" << endl;
-		exit(0);
 	}
 
 	cout << "#\tMessage" << endl << "---------------" << endl;
@@ -199,15 +247,14 @@ int main() {
 	string encodedMessage = getEncryptedMessage(selectedMessage);
 	encodedMessage = delSpaces(encodedMessage);
 
-	getPlugboardUsed(1);
-
-	// Create plugboard with user inputs
-	Plugboard plug{};
-	
-
 	// Map encoded message string to a vector
 	int messageSize = encodedMessage.size();
 	vector <int> plainNum(messageSize);
+
+	// Create plugboard
+	Plugboard plug{};
+	plug.DB_Extract(getPlugboardUsed(selectedMessage));
+	plug.setPlugPos();
 
 	// Convert input message to array of numbers
 	for (int i = 0; i < messageSize; i++)
@@ -219,15 +266,29 @@ int main() {
 	Reflector reflector;
 
 	int numRotors = getNumRotorsUsed(selectedMessage);
+	string rotorsStr = getRotorsUsed(selectedMessage);
+	vector<int> rotorNums;
+	string currentRotor = "";
+	for (int i = 0; i < rotorsStr.length(); i++) {
+		if (rotorsStr[i] == ',') {
+			rotorNums.push_back(stoi(currentRotor));
+			currentRotor = "";
+		} else {
+			currentRotor = currentRotor + string(1, rotorsStr[i]);
+		}
+	}
+
 	// Create a vector with all of the rotors so we can iterate through it
-	// Each has hard-coded values for now
 	vector<Rotor> rotors;
-
-	int scramble[26] = { 20, 13, 21, 18, 23, 1, 12, 14, 7, 10, 11, 25, 19,
-						 4, 9, 2, 0, 17, 16, 15, 6, 22, 5, 24, 3, 8 }; // The order of the scrambled numbers on the rotor
-
 	for (int i = 0; i < numRotors; i++) {
-		rotors.push_back(Rotor(scramble, 0));
+		int scramble[26];
+		string scrambleStr = getRotorScramble(rotorNums[i]);
+		cout << i << " " << scrambleStr << endl;
+		for (int j = 0; j < 25; j++) {
+			scramble[j] = letterToNum(scrambleStr[j]);
+		}
+		int notch = getRotorNotch(rotorNums[i]);
+		rotors.push_back(Rotor(scramble, notch));
 	}
 
 	for (int i = 0; i < messageSize; i++)
@@ -237,6 +298,7 @@ int main() {
 		// Send input through each rotor in sequence
 		for (int j = 0; j < numRotors; j++) {
 			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
+			cout << "After rotor " << j << ": " << plainNum[i] << endl;
 		}
 
 		// Send output of first pass thru rotors through reflector
@@ -245,6 +307,7 @@ int main() {
 		// Send reflector output through each rotor, in reverse sequential order
 		for (int j = numRotors - 1; j >= 0; j--) {
 			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
+			cout << "After rotor " << j << ": " << plainNum[i] << endl;
 		}
 
 		// Send through plugboard
