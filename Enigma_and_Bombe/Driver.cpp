@@ -2,7 +2,6 @@
 #include "Driver.h"
 #include "sqlite3.h"
 
-
 string plaintext;
 sqlite3* db;
 
