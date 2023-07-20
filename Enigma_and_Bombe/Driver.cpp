@@ -6,7 +6,7 @@ sqlite3* db;
 int msg_order;
 int plug_order;
 int rotor_order, inotch;
-int rotor_usr, plug_usr;
+string rotor_usr, plug_usr;
 string plug_store, rotor_store;
 
 static int callback(void* data, int argc, char** argv, char** azColName)
@@ -89,8 +89,8 @@ static void db_store(string tbl) {
 	if (tbl == "Past_Messages") {
 		int rotor_used, plug_used;
 		last_msg(tbl);	// grab the last message order
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', '" + encrypted_msg + "', "
-			+ to_string(rotor_usr) + ", " + to_string(plug_usr) + "); ";	// construct query using user input, will replace placeholder with actual encrypted msg
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', '" + encrypted_msg + "', '"
+			+ rotor_usr + "', '" + plug_usr + "'); ";	// construct query using user input, will replace placeholder with actual encrypted msg
 	}
 	else if (tbl == "Plugboard_Settings") {
 		last_msg(tbl);	// grab the last plug order
@@ -211,23 +211,6 @@ void ask_usr_set(int result[10]) {
 		result[i + 2] = temp_set;
 	}
 }
-int concat(int a, int b)
-{
-
-	// Convert both the integers to string
-	string s1 = to_string(a);
-	string s2 = to_string(b);
-
-	// Concatenate both strings
-	string s = s1 + s2;
-
-	// Convert the concatenated string
-	// to integer
-	int c = stoi(s);
-
-	// return the formed integer
-	return c;
-}
 int main() //This is the main
 {
 	
@@ -264,11 +247,26 @@ int main() //This is the main
 			last_msg("Rotor_Settings");
 			db_store("Rotor_Settings");
 			last_msg("Rotor_Settings");	// grab the last rotor order
-			rotor_usr = concat(rotor_usr, rotor_order);
+			if (i == 0)
+			{
+				rotor_usr = to_string(rotor_order);
+			}
+			else
+			{
+				rotor_usr = rotor_usr + ", " + to_string(rotor_order);
+			}
+			
 		}
 		else
 		{
-			rotor_usr = concat(rotor_usr, rotors[i].getName());
+			if (i == 0)
+			{
+				rotor_usr = to_string(rotors[i].getName());
+			}
+			else
+			{
+				rotor_usr = rotor_usr + ", " + to_string(rotors[i].getName());
+			}
 		}
 	}
 	
