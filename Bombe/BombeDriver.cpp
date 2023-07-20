@@ -68,9 +68,29 @@ int getPlugboardUsed(int msgNum) {
 		cout << "No plugboard setting found for msg #" << msgNum << endl;
 	}
 
-	int result = sqlite3_column_int(stmt, 0);
+	int plug = sqlite3_column_int(stmt, 0);
+	query = "SELECT plugSettings FROM Plugboard_Settings WHERE plugName = '" + to_string(plug) + "'";
 
-	return result;
+	rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK) {
+		cout << "Failed to prepare statement: " << query << endl;
+	}
+
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_ROW) {
+		cout << "No plugboard setting found for msg #" << msgNum << endl;
+	}
+
+	string result = "";
+	int length = sqlite3_column_bytes(stmt, 0);
+	for (int i = 0; i < length; i++) {
+		char plug = sqlite3_column_text(stmt, 0)[i];
+		result = result + plug;
+	}
+
+	cout << result;
+
+	return 0;
 }
 
 string getEncryptedMessage(int msgNum) {
@@ -120,7 +140,8 @@ int selectMessage() {
 
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
-		cout << "No past messages found." << endl;
+		cout << "No past messages found. Run the Enigma program and enter some messages to get started!" << endl;
+		exit(0);
 	}
 
 	cout << "#\tMessage" << endl << "---------------" << endl;
@@ -178,10 +199,10 @@ int main() {
 	string encodedMessage = getEncryptedMessage(selectedMessage);
 	encodedMessage = delSpaces(encodedMessage);
 
+	getPlugboardUsed(1);
+
 	// Create plugboard with user inputs
 	Plugboard plug{};
-	plug.createPlugboard();
-	plug.setPlugPos();
 	
 
 	// Map encoded message string to a vector
