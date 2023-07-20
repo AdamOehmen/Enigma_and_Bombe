@@ -5,6 +5,7 @@
 #include "../Enigma_and_Bombe/functions.h"
 #include "../Enigma_and_Bombe/sqlite3.h"
 
+// return the rotors used for the given message number, as a string of format "#,#,#," where # is the rotor number in that slot
 string getRotorsUsed(int msgNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
@@ -35,6 +36,7 @@ string getRotorsUsed(int msgNum) {
 	return result;
 }
 
+// returns the total number of rotors used in encrypting the given message number
 int getNumRotorsUsed(int msgNum) {
 	string rotorStr = getRotorsUsed(msgNum);
 
@@ -48,6 +50,7 @@ int getNumRotorsUsed(int msgNum) {
 	return count;
 }
 
+// returns the plugboard number used in encrypting the given message number
 string getPlugboardUsed(int msgNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
@@ -91,6 +94,7 @@ string getPlugboardUsed(int msgNum) {
 	return result;
 }
 
+// gets the rotor scramble of the given rotor number from the Rotors table
 string getRotorScramble(int rotorNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
@@ -190,6 +194,7 @@ int selectMessage() {
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_ROW) {
 		cout << "No past messages found. Run the Enigma program and enter some messages to get started!" << endl;
+		exit(0);
 	}
 
 	cout << "#\tMessage" << endl << "---------------" << endl;
@@ -284,7 +289,7 @@ int main() {
 		int scramble[26];
 		string scrambleStr = getRotorScramble(rotorNums[i]);
 		cout << i << " " << scrambleStr << endl;
-		for (int j = 0; j < 25; j++) {
+		for (int j = 0; j < 26; j++) {
 			scramble[j] = letterToNum(scrambleStr[j]);
 		}
 		int notch = getRotorNotch(rotorNums[i]);
