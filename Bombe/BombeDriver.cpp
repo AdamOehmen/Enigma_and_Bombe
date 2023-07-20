@@ -35,8 +35,12 @@ int main() {
 	// Create a vector with all of the rotors so we can iterate through it
 	// Each has hard-coded values for now
 	vector<Rotor> rotors;
+
+	int scramble[26] = { 20, 13, 21, 18, 23, 1, 12, 14, 7, 10, 11, 25, 19,
+						 4, 9, 2, 0, 17, 16, 15, 6, 22, 5, 24, 3, 8 }; // The order of the scrambled numbers on the rotor
+
 	for (int i = 0; i < numRotors; i++) {
-		rotors.push_back(Rotor());
+		rotors.push_back(Rotor(scramble, 0));
 	}
 
 	for (int i = 0; i < messageSize; i++)
