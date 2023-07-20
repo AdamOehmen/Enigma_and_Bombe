@@ -283,7 +283,7 @@ int main() //This is the main
 	cout << "Would you like to create your own settings for the Plugboard? (Y/N)" << endl;
 	cin >> usr;
 	Plugboard plug{};
-	if (usr == 'Y') {
+	if (usr == 'N') {
 		ask_usr_set(settings);
 		// Extract settings from DB and store into object
 		// Extracting Plugboard Settings and creating plugboard
@@ -297,7 +297,7 @@ int main() //This is the main
 
 		// End of Rotor Creation
 	}
-	else if (usr == 'N') {
+	else if (usr == 'Y') {
 		/*
 		Create Plugboard and Rotor Settings
 		*/
