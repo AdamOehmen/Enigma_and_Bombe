@@ -163,6 +163,7 @@ string pull_plug_set(int plug) {
 	rc = sqlite3_step(stmt); // Execute the statement
 	if (rc != SQLITE_ROW) {
 		cout << "Plugboard Doesn't exist" << endl;	// Check if plugboard exists
+		return "Er";
 	}
 	size_t length = strlen(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));  // calculate the length using reinterpret_cast since strlen expects a string
 	int size = length * sizeof(unsigned char);  // calculate the total size
@@ -196,10 +197,23 @@ void ask_usr_set(int result[10]) {
 		cout << "open success" << endl;
 	}
 	string query = "SELECT * FROM Plugboard_Settings";
-	cout << "What is the Plugboard setting you would like to use?" << endl;
 	sqlite3_exec(db, query.c_str(), callback, NULL, NULL);
-	cout << "Please enter plugName of the setting you want to use: " << endl;
-	cin >> plugSet;
+	while (1)
+	{
+		cout << "Please enter plugName of the setting you want to use: " << endl;
+		if (cin >> plugSet)  // Check if the input operation is successful
+		{
+			
+			break;
+		}
+		else
+		{
+			cout << "Invalid input. Please try again." << endl;
+			cin.clear();  // Clear any error flags from the input stream
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Ignore the rest of the input line
+		}
+	}
+	
 	result[0] = plugSet;
 	plug_usr = plugSet;
 	/*
@@ -239,6 +253,7 @@ int main() //This is the main
 {
 	sqlite3_stmt* st;
 	string sql3;
+	string plugset;
 	int settings[10];	// Settings are stored as follows: #1: Plug Setting ID #2: Number of Rotors #3-10: Rotor ID's 
 	// If Rotor ID is 0, then it doesn't exist
 
@@ -248,35 +263,58 @@ int main() //This is the main
 	// Ask User whether they would like to use predefined settings or create 
 	// settings for Plugboard and Rotors
 	char usr;
-	cout << "Would you like to create your own settings for the Plugboard? (Y/N)" << endl;
-	cin >> usr;
-	cin.ignore();
 	Plugboard plug{};
-	if (usr == 'N') {
-		ask_usr_set(settings);
-		// Extract settings from DB and store into object
-		// Extracting Plugboard Settings and creating plugboard
-		// Start of Plugboard Creation
-		string plugset = pull_plug_set(settings[0]);
-		plug.DB_Extract(plugset);
-		plug.setPlugPos();
-		plug_store = plug.returnPlugLet();
-		// End of Plugboard Creation
-		// Start of Rotor Creation
+	while (1)
+	{
+		cout << "Would you like to create your own settings for the Plugboard? (Y/N): ";
+		cin >> usr;
+		cin.ignore();
+		
+		if (usr == 'N') {
+			// Extract settings from DB and store into object
+			// Extracting Plugboard Settings and creating plugboard
+			// Start of Plugboard Creation
+			while (1)
+			{
+				ask_usr_set(settings);
+				plugset = pull_plug_set(settings[0]);
+				if (plugset.compare("Error") == 0)
+				{
+					cout << "Please enter a valid Plugboard";
+				}
+				else
+				{
+					break;
+				}
 
-		// End of Rotor Creation
-	}
-	else if (usr == 'Y') {
-		/*
-		Create Plugboard and Rotor Settings
-		*/
-		// Create plugboard with user inputs
-		plug.createPlugboard();
-		plug.setPlugPos();
-		plug_store = plug.returnPlugLet();
-		db_store("Plugboard_Settings");
-		// Create Rotors with user inputs 
-		// Reuse Below code
+			}
+
+			plug.DB_Extract(plugset);
+			plug.setPlugPos();
+			plug_store = plug.returnPlugLet();
+			// End of Plugboard Creation
+			// Start of Rotor Creation
+
+			// End of Rotor Creation
+			break;
+		}
+		else if (usr == 'Y') {
+			/*
+			Create Plugboard and Rotor Settings
+			*/
+			// Create plugboard with user inputs
+			plug.createPlugboard();
+			plug.setPlugPos();
+			plug_store = plug.returnPlugLet();
+			db_store("Plugboard_Settings");
+			// Create Rotors with user inputs 
+			// Reuse Below code
+			break;
+		}
+		else
+		{
+			cout << "Please enter Y or N" << endl;
+		}
 	}
 	// Place breakpoint here if you want to test above	
 	// When testing Plugboard ensure you have a setting plugSetting entry with 20 characters such as 'ABCDEFGHIJKLMNOPQRSY' 

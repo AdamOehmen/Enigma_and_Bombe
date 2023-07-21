@@ -121,16 +121,8 @@ Rotor::Rotor()
 		}
 		else if (ClearWhenAddingDataBase == "Y")
 		{
-			for (int i = 0; i < 26; i++)
-			{
-				cout << Alp[i] << " goes to what letter: ";
-				cin >> temp;
-				str_scramble[i] = temp;
-				this->scramble[i] = lettersToNum(temp);
-			}
-			cout << "What letter has the notch: ";
-			cin >> temp;
-			this->notch = lettersToNum(temp);
+			UI_Scramble();
+			UI_Notch();
 			YN = 1;
 			break;
 		}
@@ -229,36 +221,52 @@ void Rotor::UI_Notch()
 	getline(cin, temp);
 	char notch_Let = temp[0];
 	notch = lettersToNum(notch_Let);
-	if (notch >= 0 && notch < 26)
+	while (1)
 	{
-		this->notch = notch;
-	}
-	else
-	{
-		cout << "Invalid notch value" << endl;
-		this->notch = 0;
+		if (notch >= 0 && notch < 26)
+		{
+			this->notch = notch;
+			break;
+		}
+		else
+		{
+			cout << "Invalid notch value" << endl;
+			this->notch = 0;
+		}
 	}
 }
 
 void Rotor::UI_Scramble()
 {
+	char ctemp;
+	int itemp;
+	string sttemp;
 	for (int i = 0; i < 26; i++)
 	{
-		char ctemp;
-		int itemp;
-		string sttemp;
-		cout << Alp[i] << " is link to: ";
-		getline(cin, sttemp);
-		ctemp = sttemp[0];
-		ctemp = toupper(ctemp);
-		itemp = lettersToNum(ctemp);
+		while (1)
+		{
+
+			cout << Alp[i] << " is link to: ";
+			getline(cin, sttemp);
+			ctemp = sttemp[0];
+			ctemp = toupper(ctemp);
+			itemp = lettersToNum(ctemp);
+			try {
+				int value = stoi(sttemp);
+				cout << "Invalid input. Please enter a Letter." << endl;
+				continue;
+			}
+			catch (const std::invalid_argument& e) {
+				cout << "You entered: " << sttemp << endl;
+				break;
+			}
+		}
 		for (int j = 0; j < 26; j++)
 		{
 			if (itemp == scramble[j])
 			{
-				cout << ctemp << " is already attached";
+				cout << ctemp << " is already attached" << endl;
 				i--;
-				break;
 			}
 			if (j == 25)
 			{
