@@ -29,6 +29,7 @@ string getRotorsUsed(int msgNum) {
 		exit(0);
 	}
 
+	// iterate through each character of rotorUsed and store into a string
 	string result = "";
 	int length = sqlite3_column_bytes(stmt, 0);
 	for (int i = 0; i < length; i++) {
@@ -36,13 +37,16 @@ string getRotorsUsed(int msgNum) {
 		result = result + rotor;
 	}
 
+	// delete unused spaces and add a comma at the end (so that # of commas = # of rotors)
 	return delSpaces(result) + ",";
 }
 
 // returns the total number of rotors used in encrypting the given message number
 int getNumRotorsUsed(int msgNum) {
+	// get the string of rotors used for the msg
 	string rotorStr = getRotorsUsed(msgNum);
 
+	// count # of commas in the string, which is equal to the number of rotors
 	int count = 0;
 	for (int i = 0; i < rotorStr.length(); i++) {
 		if (rotorStr[i] == ',') {
@@ -92,6 +96,7 @@ string getPlugboardUsed(int msgNum) {
 		exit(0);
 	}
 
+	// iterate through each character of plugSettings and store into a string
 	string result = "";
 	int length = sqlite3_column_bytes(stmt, 0);
 	for (int i = 0; i < length; i++) {
@@ -123,6 +128,7 @@ string getRotorScramble(int rotorNum) {
 		exit(0);
 	}
 
+	// iterate through each character of rotorSetting and store into string
 	string result = "";
 	int length = sqlite3_column_bytes(stmt, 0);
 	for (int i = 0; i < length; i++) {
@@ -180,7 +186,8 @@ string getEncryptedMessage(int msgNum) {
 		cout << "No message #" << msgNum << " found." << endl;
 		exit(0);
 	}
-
+	
+	// iterate through each character of encryptedMsg and store in result string
 	string result = "";
 	int length = sqlite3_column_bytes(stmt, 0);
 	for (int i = 0; i < length; i++) {
@@ -191,6 +198,7 @@ string getEncryptedMessage(int msgNum) {
 	return result;
 }
 
+// ask the user to pick a message from the database to decrypt
 int selectMessage() {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
@@ -214,6 +222,7 @@ int selectMessage() {
 		exit(0);
 	}
 
+	// print messages table and store message #s into a vector
 	cout << "#\tMessage" << endl << "---------------" << endl;
 	vector<int> messages;
 	bool exit = false;
@@ -236,6 +245,7 @@ int selectMessage() {
 
 	int result;
 	exit = false;
+	// get input from user
 	do {
 		cout << "Enter the # of the message you'd like to decode: ";
 		cin >> result;
@@ -246,6 +256,7 @@ int selectMessage() {
 			result = 0;
 			continue;
 		}
+		// make sure user input is in the message # vector
 		if (find(messages.begin(), messages.end(), result) != messages.end()) {
 			exit = true;
 		}
@@ -358,6 +369,7 @@ int main() {
 		cout << endl;
 	}
 
+	// print out final decrypted message
 	cout << "Final decrypted message: ";
 	for (int i = 0; i < plainNum.size(); i++) {
 		cout << numToLetter(plainNum[i]);
