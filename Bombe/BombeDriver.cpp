@@ -276,7 +276,7 @@ int main() {
 	// Create plugboard
 	Plugboard plug{};
 	string plugboardUsed = getPlugboardUsed(selectedMessage);
-	cout << "Using plugboard #" << plugboardUsed << endl;
+	cout << "Using plugboard: " << plugboardUsed << endl;
 	plug.DB_Extract(plugboardUsed);
 	plug.setPlugPos();
 
