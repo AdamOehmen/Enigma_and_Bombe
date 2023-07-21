@@ -36,7 +36,7 @@ string getRotorsUsed(int msgNum) {
 		result = result + rotor;
 	}
 
-	return result;
+	return delSpaces(result) + ",";
 }
 
 // returns the total number of rotors used in encrypting the given message number
@@ -275,7 +275,9 @@ int main() {
 
 	// Create plugboard
 	Plugboard plug{};
-	plug.DB_Extract(getPlugboardUsed(selectedMessage));
+	string plugboardUsed = getPlugboardUsed(selectedMessage);
+	cout << "Using plugboard #" << plugboardUsed << endl;
+	plug.DB_Extract(plugboardUsed);
 	plug.setPlugPos();
 
 	// Convert input message to array of numbers
@@ -305,7 +307,7 @@ int main() {
 	for (int i = 0; i < numRotors; i++) {
 		int scramble[26];
 		string scrambleStr = getRotorScramble(rotorNums[i]);
-		cout << i << " " << scrambleStr << endl;
+		cout << "Using rotor #" << rotorNums[i] << ": " << scrambleStr << endl;
 		for (int j = 0; j < 26; j++) {
 			scramble[j] = letterToNum(scrambleStr[j]);
 		}

@@ -6,9 +6,10 @@ sqlite3* db;
 
 int msg_order;
 int plug_order;
-int rotor_order;
-int rotor_usr, plug_usr;
-string plug_store;
+int rotor_order, inotch;
+string rotor_usr;
+int plug_usr;
+string plug_store, rotor_store;
 
 static int callback(void* data, int argc, char** argv, char** azColName)
 {
@@ -40,6 +41,7 @@ static void last_msg(string tbl) {
 		order = "rotorName";
 	}
 	query = "SELECT MAX("+ order +") FROM " + tbl + "; ";
+	cout << "The query is: " << query;
 	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
@@ -90,16 +92,16 @@ static void db_store(string tbl) {
 	if (tbl == "Past_Messages") {
 		int rotor_used, plug_used;
 		last_msg(tbl);	// grab the last message order
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', '" + encrypted_msg + "', "
-			+ to_string(rotor_usr) + ", " + to_string(plug_usr) + "); ";	// construct query using user input, will replace placeholder with actual encrypted msg
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(msg_order) + ", '" + plaintext + "', '" + encrypted_msg + "', '"
+			+ rotor_usr +  "', " + to_string(plug_usr) + "); ";	// construct query using user input, will replace placeholder with actual encrypted msg
 	}
 	else if (tbl == "Plugboard_Settings") {
 		last_msg(tbl);	// grab the last plug order
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(plug_order) + ", '"+plug_store+"');";	// construct query using user input, will replace placeholder with actual setting
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(plug_order) + ", '" + plug_store + "');";	// construct query using user input, will replace placeholder with actual setting
 	}
 	else if (tbl == "Rotor_Settings") {
 		last_msg(tbl);	// grab the last rotor order
-		query = "INSERT INTO " + tbl + " VALUES(" + to_string(rotor_order) + ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 1); ";	// construct query using user input, will replace placeholder with actual setting and notch
+		query = "INSERT INTO " + tbl + " VALUES(" + to_string(rotor_order) + ", '" + rotor_store + "', " + to_string(inotch) + "); ";	// construct query using user input, will replace placeholder with actual setting and notch
 	}
 	cout << query << endl;
 	exit = sqlite3_exec(db, query.c_str(), callback, NULL, NULL);	// execute the query command 
@@ -175,65 +177,11 @@ string pull_plug_set(int plug) {
 	return result;
 
 }
-string pull_rotor_set(int rotor) {
-	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
-	if (exit != SQLITE_OK) {	// check if database is opened
-		cout << "error" << endl;
-	}
-	else {
-		cout << "open success" << endl;
-	}
-	string query = "SELECT rotorSetting FROM Rotor_Settings WHERE rotorName = " + to_string(rotor) + ";";	// SQL statement selecting rotor setting
-	sqlite3_stmt* stmt;
-	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
-	if (rc != SQLITE_OK) {
-		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;	// Check if statement is prepared correctly
-	}
-	rc = sqlite3_step(stmt); // Execute the statement
-	if (rc != SQLITE_ROW) {
-		cout << "Rotor Doesn't exist" << endl;	// Check if plugboard exists
-	}
 
-	size_t length = strlen(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));  // calculate the length using reinterpret_cast since strlen expects a string
-	int size = length * sizeof(unsigned char);  // calculate the total size
-
-	string result = "";
-	for (int i = 0; i < size; i++) {
-		char temp = sqlite3_column_text(stmt, 0)[i];	// temp char set to each index of char array
-		result = result + temp;	// append temp to resulting string
-	}
-	sqlite3_finalize(stmt); // Finalize the statement
-	sqlite3_close(db);	// close db
-	return result;
-}
-int pull_rotor_notch(int rotor) {
-	int exit = sqlite3_open("enigma_bombe.db", &db); // open database
-	if (exit != SQLITE_OK) {	// check if database is opened
-		cout << "error" << endl;
-	}
-	else {
-		cout << "open success" << endl;
-	}
-	string query = "SELECT notch FROM Rotor_Settings WHERE rotorName = " + to_string(rotor) + ";";	// SQL statement selecting rotor setting
-	sqlite3_stmt* stmt;
-	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
-	if (rc != SQLITE_OK) {
-		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;	// Check if statement is prepared correctly
-	}
-	rc = sqlite3_step(stmt); // Execute the statement
-	if (rc != SQLITE_ROW) {
-		cout << "Rotor Doesn't exist" << endl;	// Check if plugboard exists
-	}
-
-	int result = sqlite3_column_int(stmt, 0);	// save notch value into result
-	sqlite3_finalize(stmt); // Finalize the statement
-	sqlite3_close(db);	// close db
-	return result;
-}
 void ask_usr_set(int result[10]) {
 	int plugSet;	// Plugboard Setting input
-	int numRotor;   // Number of Rotors input
-	int rotorSet[] = { 0,0,0,0,0,0,0,0 }; // Rotor Settings 
+	//int numRotor;   // Number of Rotors input
+	//int rotorSet[] = { 0,0,0,0,0,0,0,0 }; // Rotor Settings 
 	/*
 	Final Result Array Stores Following:
 	First number is plug setting
@@ -253,6 +201,8 @@ void ask_usr_set(int result[10]) {
 	cout << "Please enter plugName of the setting you want to use: " << endl;
 	cin >> plugSet;
 	result[0] = plugSet;
+	plug_usr = plugSet;
+	/*
 	cout << "How many rotors would you like to use?" << endl;
 	cin >> numRotor;
 	result[1] = numRotor;
@@ -265,6 +215,24 @@ void ask_usr_set(int result[10]) {
 		rotorSet[i] = temp_set;
 		result[i + 2] = temp_set;
 	}
+	*/
+}
+int concat(int a, int b)
+{
+
+	// Convert both the integers to string
+	string s1 = to_string(a);
+	string s2 = to_string(b);
+
+	// Concatenate both strings
+	string s = s1 + s2;
+
+	// Convert the concatenated string
+	// to integer
+	int c = stoi(s);
+
+	// return the formed integer
+	return c;
 }
 
 int main() //This is the main
@@ -282,6 +250,7 @@ int main() //This is the main
 	char usr;
 	cout << "Would you like to create your own settings for the Plugboard? (Y/N)" << endl;
 	cin >> usr;
+	cin.ignore();
 	Plugboard plug{};
 	if (usr == 'N') {
 		ask_usr_set(settings);
@@ -316,23 +285,57 @@ int main() //This is the main
 	Reflector reflector;
 
 	//Set number of rotors being used
-	int numRotors;
-	cout << "How many rotors would you like to use: ";
-	cin >> numRotors;
-	cin.ignore();
+	int numRotors = 10;
+	while (numRotors > 8) {
+		cout << "How many rotors would you like to use: (Max is 8)";
+		cin >> numRotors;
+		cin.ignore();
+		if (numRotors > 8) {
+			cout << "Max Rotors is 8!" << endl;
+		}
+	}
+	settings[1] = numRotors; // add to settings
+	
 	// Create a vector with all of the rotors so we can iterate through it
 	// Each has hard-coded values for now
 	vector<Rotor> rotors;
 	for (int i = 0; i < numRotors; i++) {
 		rotors.push_back(Rotor());
-	}
-	for (int i = 0; i < numRotors; i++)
-	{
-		rotors[i].UI_Scramble();
-		rotors[i].UI_Notch();
-		cout << "Rotor " << i + 1 << " is all set";
+		int chkYN = rotors[i].getYN();
+		settings[i + 2] = rotors[i].getName();
+		if (chkYN == 1)
+		{
+			rotor_store = rotors[i].getStrScramble();
+			inotch = rotors[i].getNotch();
+			last_msg("Rotor_Settings");
+			//cout << "The previous rotor is: " << rotor_order << endl;
+			db_store("Rotor_Settings");
+			rotor_order = rotor_order + 1;	// grab the last rotor order
+			//cout << "The lastest rotor is: " << rotor_order << endl;
+			if (i == 0)
+			{
+				rotor_usr = to_string(rotor_order);
+			}
+			else
+			{
+				rotor_usr = rotor_usr + ", " + to_string(rotor_order);
+			}
+
+		}
+		else
+		{
+			if (i == 0)
+			{
+				rotor_usr = to_string(rotors[i].getName());
+			}
+			else
+			{
+				rotor_usr = rotor_usr + ", " + to_string(rotors[i].getName());
+			}
+		}
 	}
 
+	cin.ignore();
 	cout << "What is the message you want to send\n"; //get the message we want to encode
 	getline(cin,plaintext);
 	plaintext = delSpaces(plaintext);
