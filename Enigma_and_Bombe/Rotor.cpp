@@ -301,3 +301,10 @@ int lettersToNum(char letter) {
 		return 99;
 	}
 }
+
+Rotor::Rotor(int newScramble[], int newNotch) {
+	for (int i = 0; i <= 25; i++) {
+		this->scramble[i] = newScramble[i];
+	}
+	this->notch = newNotch;
+}
