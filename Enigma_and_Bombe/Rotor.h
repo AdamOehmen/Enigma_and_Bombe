@@ -9,6 +9,7 @@ private:
 	int rtrName;
 	string scramble = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 							 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+	string StrScm;
 
 public:
 	Rotor();

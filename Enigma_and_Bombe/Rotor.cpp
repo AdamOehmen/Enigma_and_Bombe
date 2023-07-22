@@ -147,8 +147,14 @@ int Rotor::getNotch()
 	return this->notch;
 }
 
+string Rotor::getStrScramble()
+{
+	return this->StrScm;
+}
+
 string Rotor::getScramble()
 {
+	
 	return this->scramble;
 }
 
@@ -175,7 +181,7 @@ int Rotor::getScramblePos(int input)
 	{
 		// simulate rotation
 		int newInput = (input + position) % 26;
-		return lettersToNum(this->scramble[newInput]);
+		return this->scramble[newInput];
 	}
 	else
 	{
@@ -188,16 +194,11 @@ int Rotor::getScramblePos(int input)
 int Rotor::getReversePos(int input)
 {
 	int result;
-	int scrInt[26];
-	for (int i = 0; i < 26; i++)
-	{
-		scrInt[i] = lettersToNum(this->scramble[i]);
-	}
 	if (input >= 0 && input < 26)
 	{
 		// Check all positions on the rotor
 		for (int i = 0; i <= 25; i++) {
-			if (scrInt[i] == input) {
+			if (this->scramble[i] == input) {
 				// calculate rotations by subtracting it from the result, then doing a mod (and if the result of mod is negative, make it positive by cycling back around)
 				int result = (i - position) % 26;
 				if (result < 0) {
@@ -273,7 +274,8 @@ void Rotor::UI_Scramble()
 			}
 			else if (j == 25)
 			{
-				this->scramble[i] = sttemp[0];
+				this->StrScm = this->StrScm + ctemp;
+				this->scramble[i] = lettersToNum(ctemp);
 			}
 		}
 		//Add stuff for dab

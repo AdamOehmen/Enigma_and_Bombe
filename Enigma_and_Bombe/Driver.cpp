@@ -356,7 +356,7 @@ int main() //This is the main
 		settings[i + 2] = rotors[i].getName();
 		if (chkYN == 1)
 		{
-			rotor_store = rotors[i].getScramble();
+			rotor_store = rotors[i].getStrScramble();
 			inotch = rotors[i].getNotch();
 			last_msg("Rotor_Settings");
 			//cout << "The previous rotor is: " << rotor_order << endl;
