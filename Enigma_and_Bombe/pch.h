@@ -1,6 +1,4 @@
 // pre-compiled header file
-#ifndef pch
-#define pch
 #pragma once
 #include <iostream>
 #include <vector>
@@ -8,5 +6,3 @@
 #include "sqlite3.h"
 
 using namespace std;
-
-#endif

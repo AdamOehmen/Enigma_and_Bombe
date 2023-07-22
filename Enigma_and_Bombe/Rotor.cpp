@@ -32,7 +32,7 @@ string pull_rotor_set(int rotor) {
 		cout << "error" << endl;
 	}
 	else {
-		cout << "open success" << endl;
+		//cout << "open success" << endl;
 	}
 	string query = "SELECT rotorSetting FROM Rotor_Settings WHERE rotorName = " + to_string(rotor) + ";";	// SQL statement selecting rotor setting
 	sqlite3_stmt* stmt;
@@ -63,7 +63,7 @@ int pull_rotor_notch(int rotor) {
 		cout << "error" << endl;
 	}
 	else {
-		cout << "open success" << endl;
+		//cout << "open success" << endl;
 	}
 	string query = "SELECT notch FROM Rotor_Settings WHERE rotorName = " + to_string(rotor) + ";";	// SQL statement selecting rotor setting
 	sqlite3_stmt* stmt;
@@ -308,4 +308,11 @@ int lettersToNum(char letter) {
 		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet\n";
 		return 99;
 	}
+}
+
+Rotor::Rotor(int newScramble[], int newNotch) {
+	for (int i = 0; i <= 25; i++) {
+		this->scramble[i] = newScramble[i];
+	}
+	this->notch = newNotch;
 }

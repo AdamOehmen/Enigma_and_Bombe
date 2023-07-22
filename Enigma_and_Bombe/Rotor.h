@@ -12,6 +12,7 @@ private:
 
 public:
 	Rotor();
+	Rotor(int newScramble[26], int notch);
 	int getName();
 	int getNotch();
 	string getScramble();
