@@ -361,7 +361,7 @@ int main() //This is the main
 			last_msg("Rotor_Settings");
 			//cout << "The previous rotor is: " << rotor_order << endl;
 			db_store("Rotor_Settings");
-			rotor_order = rotor_order + 1;	// grab the last rotor order
+			//rotor_order = rotor_order + 1;	// grab the last rotor order
 			//cout << "The lastest rotor is: " << rotor_order << endl;
 			if (i == 0)
 			{
