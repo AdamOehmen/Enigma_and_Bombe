@@ -109,9 +109,10 @@ Rotor::Rotor()
 		{
 			cout << "Which rotors would you like to use: ";
 			cin >> this->rtrName;
+			cin.ignore();
 			this->scramble = pull_rotor_set(this->rtrName);
 			cout << "Setting is " << this->scramble << endl;
-			for (int i = 0; i < scramble.length(); i++)
+			for (int i = 0; i < this->scramble.length(); i++)
 			{
 				this->scramble[i] = lettersToNum(this->scramble[i]);
 			}
@@ -146,9 +147,6 @@ int Rotor::getNotch()
 	return this->notch;
 }
 
-string Rotor::getStrScramble() {
-	return str_scramble;
-}
 string Rotor::getScramble()
 {
 	return this->scramble;
@@ -177,7 +175,7 @@ int Rotor::getScramblePos(int input)
 	{
 		// simulate rotation
 		int newInput = (input + position) % 26;
-		return scramble[newInput];
+		return lettersToNum(this->scramble[newInput]);
 	}
 	else
 	{
@@ -190,11 +188,16 @@ int Rotor::getScramblePos(int input)
 int Rotor::getReversePos(int input)
 {
 	int result;
+	int scrInt[26];
+	for (int i = 0; i < 26; i++)
+	{
+		scrInt[i] = lettersToNum(this->scramble[i]);
+	}
 	if (input >= 0 && input < 26)
 	{
 		// Check all positions on the rotor
 		for (int i = 0; i <= 25; i++) {
-			if (scramble[i] == input) {
+			if (scrInt[i] == input) {
 				// calculate rotations by subtracting it from the result, then doing a mod (and if the result of mod is negative, make it positive by cycling back around)
 				int result = (i - position) % 26;
 				if (result < 0) {
@@ -217,12 +220,12 @@ int Rotor::getPos() {
 void Rotor::UI_Notch()
 {
 	string temp;
-	cout << "What letter is the notch at: ";
-	getline(cin, temp);
-	char notch_Let = temp[0];
-	notch = lettersToNum(notch_Let);
 	while (1)
 	{
+		cout << "What letter is the notch at: ";
+		getline(cin, temp);
+		char notch_Let = temp[0];
+		notch = lettersToNum(notch_Let);
 		if (notch >= 0 && notch < 26)
 		{
 			this->notch = notch;
@@ -239,7 +242,6 @@ void Rotor::UI_Notch()
 void Rotor::UI_Scramble()
 {
 	char ctemp;
-	int itemp;
 	string sttemp;
 	for (int i = 0; i < 26; i++)
 	{
@@ -250,7 +252,7 @@ void Rotor::UI_Scramble()
 			getline(cin, sttemp);
 			ctemp = sttemp[0];
 			ctemp = toupper(ctemp);
-			itemp = lettersToNum(ctemp);
+			sttemp = ctemp;
 			try {
 				int value = stoi(sttemp);
 				cout << "Invalid input. Please enter a Letter." << endl;
@@ -263,14 +265,15 @@ void Rotor::UI_Scramble()
 		}
 		for (int j = 0; j < 26; j++)
 		{
-			if (itemp == scramble[j])
+			if (ctemp == this->scramble[j])
 			{
-				cout << ctemp << " is already attached" << endl;
+				cout << sttemp << " is already attached" << endl;
 				i--;
+				break;
 			}
-			if (j == 25)
+			else if (j == 25)
 			{
-				scramble[i] = itemp;
+				this->scramble[i] = sttemp[0];
 			}
 		}
 		//Add stuff for dab
