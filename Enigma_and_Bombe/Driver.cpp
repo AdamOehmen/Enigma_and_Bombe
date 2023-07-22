@@ -41,7 +41,7 @@ static void last_msg(string tbl) {
 		order = "rotorName";
 	}
 	query = "SELECT MAX("+ order +") FROM " + tbl + "; ";
-	cout << "The query is: " << query;
+	//cout << "The query is: " << query;
 	int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr); // Prepare the statement
 	if (rc != SQLITE_OK) {
 		cout << "Failed to prepare statement: " << sqlite3_errmsg(db) << endl;
@@ -87,7 +87,7 @@ static void db_store(string tbl) {
 		cout << "error" << endl;
 	}
 	else {
-		cout << "open success" << endl;
+		//cout << "open success" << endl;
 	}
 	if (tbl == "Past_Messages") {
 		int rotor_used, plug_used;
@@ -103,14 +103,14 @@ static void db_store(string tbl) {
 		last_msg(tbl);	// grab the last rotor order
 		query = "INSERT INTO " + tbl + " VALUES(" + to_string(rotor_order) + ", '" + rotor_store + "', " + to_string(inotch) + "); ";	// construct query using user input, will replace placeholder with actual setting and notch
 	}
-	cout << query << endl;
+	//cout << query << endl;
 	exit = sqlite3_exec(db, query.c_str(), callback, NULL, NULL);	// execute the query command 
 	if (exit != SQLITE_OK)	// check if query has been executed successfully 
 	{
 		cerr << "Error Insert: " << sqlite3_errmsg(db) << endl;
 	}
 	else {
-		cout << "Inserted into Database Successfully!" << endl;
+		//cout << "Inserted into Database Successfully!" << endl;
 		sqlite3_close(db);	// close database after writing 
 	}
 }
@@ -121,7 +121,7 @@ int* pull_msg_settings(string encrypt) {
 		cout << "error" << endl;
 	}
 	else {
-		cout << "open success" << endl;
+		//cout << "open success" << endl;
 	}
 	string query = "SELECT plugUsed, rotorUsed FROM Past_Messages WHERE encryptedMsg = '" + encrypt + "';";	// SQL statement selecting the rotorUsed element for the encrypted msg
 	sqlite3_stmt* stmt;
@@ -152,7 +152,7 @@ string pull_plug_set(int plug) {
 		cout << "error" << endl;
 	}
 	else {
-		cout << "open success" << endl;
+		//cout << "open success" << endl;
 	}
 	string query = "SELECT plugSettings FROM Plugboard_Settings WHERE plugName = " + to_string(plug) + ";";	// SQL statement selecting plugboard setting
 	sqlite3_stmt* stmt;
@@ -194,7 +194,7 @@ void ask_usr_set(int result[10]) {
 		cout << "error" << endl;
 	}
 	else {
-		cout << "open success" << endl;
+		//cout << "open success" << endl;
 	}
 	string query = "SELECT * FROM Plugboard_Settings";
 	sqlite3_exec(db, query.c_str(), callback, NULL, NULL);
@@ -257,7 +257,7 @@ int main() //This is the main
 	int settings[10];	// Settings are stored as follows: #1: Plug Setting ID #2: Number of Rotors #3-10: Rotor ID's 
 	// If Rotor ID is 0, then it doesn't exist
 
-	cout << "Welcome to Enigma!" << endl;
+	cout << "Welcome to Enigma!" << endl << endl;
 	
 	
 	// Ask User whether they would like to use predefined settings or create 
@@ -280,7 +280,7 @@ int main() //This is the main
 				plugset = pull_plug_set(settings[0]);
 				if (plugset.compare("Error") == 0)
 				{
-					cout << "Please enter a valid Plugboard";
+					cout << "Please enter a valid Plugboard" << endl << endl;
 				}
 				else
 				{
@@ -315,6 +315,7 @@ int main() //This is the main
 		{
 			cout << "Please enter Y or N" << endl;
 		}
+		cout << endl;
 	}
 	// Place breakpoint here if you want to test above	
 	// When testing Plugboard ensure you have a setting plugSetting entry with 20 characters such as 'ABCDEFGHIJKLMNOPQRSY' 
@@ -325,11 +326,23 @@ int main() //This is the main
 	//Set number of rotors being used
 	int numRotors = 10;
 	while (numRotors > 8) {
-		cout << "How many rotors would you like to use: (Max is 8)";
-		cin >> numRotors;
-		cin.ignore();
-		if (numRotors > 8) {
-			cout << "Max Rotors is 8!" << endl;
+		while (1) {
+			cout << endl << "How many rotors would you like to use? (Max is 8): ";
+			cin >> numRotors;
+
+			if (cin.fail()) {
+				cout << "Invalid input. Please enter an integer value." << endl;
+				cin.clear();
+				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+			}
+			else {
+				if (numRotors <= 8 && numRotors >= 1) {
+					break; // Exit the loop as we have a valid number of rotors
+				}
+				else {
+					cout << "Invalid input. Please enter a number between 1 and 8." << endl;
+				}
+			}
 		}
 	}
 	settings[1] = numRotors; // add to settings
@@ -348,7 +361,7 @@ int main() //This is the main
 			last_msg("Rotor_Settings");
 			//cout << "The previous rotor is: " << rotor_order << endl;
 			db_store("Rotor_Settings");
-			rotor_order = rotor_order + 1;	// grab the last rotor order
+			//rotor_order = rotor_order + 1;	// grab the last rotor order
 			//cout << "The lastest rotor is: " << rotor_order << endl;
 			if (i == 0)
 			{
@@ -373,11 +386,29 @@ int main() //This is the main
 		}
 	}
 
-	cin.ignore();
-	cout << "What is the message you want to send\n"; //get the message we want to encode
-	getline(cin,plaintext);
-	plaintext = delSpaces(plaintext);
+	cin.clear();
+	while (1)
+	{
+		cout << "What is the message you want to send: ";
+		getline(cin, plaintext);
 
+		// Check if the input contains any special characters
+		bool containsSpecialCharacters = false;
+		for (char c : plaintext) {
+			if (!isalpha(c)) { // Check if the character is an alphabet letter
+				containsSpecialCharacters = true;
+				break;
+			}
+		}
+
+		if (containsSpecialCharacters) {
+			cout << "Invalid input. Please enter letters or words only." << endl << endl;
+		}
+		else {
+			// No special characters found, we can proceed
+			break;
+		}
+	}
 	// put input string into array
 	int messageSize = plaintext.size();
 	vector<int> plainNum(messageSize);
@@ -388,9 +419,6 @@ int main() //This is the main
 	{
 		plainNum[i] = letterToNum(plaintext[i]);
 	}
-
-
-	
 
 	
 	for (int i = 0; i < messageSize; i++)
@@ -417,14 +445,14 @@ int main() //This is the main
 
 		// Rotate rotor #1 after every encrypted input letter
 		rotors[0].rotate();
-		cout << "ROTATE ROTOR 1" << endl << endl;
+		//cout << "ROTATE ROTOR 1" << endl << endl;
 
 		bool lastRotated = true;
 		for (int k = 1; k < numRotors; k++) {
 			// Rotate the next rotor IF the notch of the previous matches the current position, AND the previous just rotated
 			if ((rotors[k - 1].getNotch() == rotors[k - 1].getPos()) && lastRotated) {
 				rotors[k].rotate();
-				cout << "ROTATE ROTOR " << (k + 1) << endl;
+				//cout << "ROTATE ROTOR " << (k + 1) << endl;
 				lastRotated = true;
 			}
 			// Otherwise, update value of lastRotated
@@ -440,7 +468,7 @@ int main() //This is the main
 		encrypted_msg = encrypted_msg + numToLetter(plainNum[i]);
 	}
 
-	cout << encrypted_msg << endl;
+	cout << encrypted_msg << endl << endl;
 	
 	// call last_msg so program knows where to store the encrypted message
 	db_store("Past_Messages");

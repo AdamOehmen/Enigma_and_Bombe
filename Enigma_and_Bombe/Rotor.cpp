@@ -32,7 +32,7 @@ string pull_rotor_set(int rotor) {
 		cout << "error" << endl;
 	}
 	else {
-		cout << "open success" << endl;
+		//cout << "open success" << endl;
 	}
 	string query = "SELECT rotorSetting FROM Rotor_Settings WHERE rotorName = " + to_string(rotor) + ";";	// SQL statement selecting rotor setting
 	sqlite3_stmt* stmt;
@@ -63,7 +63,7 @@ int pull_rotor_notch(int rotor) {
 		cout << "error" << endl;
 	}
 	else {
-		cout << "open success" << endl;
+		//cout << "open success" << endl;
 	}
 	string query = "SELECT notch FROM Rotor_Settings WHERE rotorName = " + to_string(rotor) + ";";	// SQL statement selecting rotor setting
 	sqlite3_stmt* stmt;
@@ -109,9 +109,10 @@ Rotor::Rotor()
 		{
 			cout << "Which rotors would you like to use: ";
 			cin >> this->rtrName;
+			cin.ignore();
 			this->scramble = pull_rotor_set(this->rtrName);
 			cout << "Setting is " << this->scramble << endl;
-			for (int i = 0; i < scramble.length(); i++)
+			for (int i = 0; i < this->scramble.length(); i++)
 			{
 				this->scramble[i] = lettersToNum(this->scramble[i]);
 			}
@@ -146,11 +147,14 @@ int Rotor::getNotch()
 	return this->notch;
 }
 
-string Rotor::getStrScramble() {
-	return str_scramble;
+string Rotor::getStrScramble()
+{
+	return this->StrScm;
 }
+
 string Rotor::getScramble()
 {
+	
 	return this->scramble;
 }
 
@@ -177,7 +181,7 @@ int Rotor::getScramblePos(int input)
 	{
 		// simulate rotation
 		int newInput = (input + position) % 26;
-		return scramble[newInput];
+		return this->scramble[newInput];
 	}
 	else
 	{
@@ -194,7 +198,7 @@ int Rotor::getReversePos(int input)
 	{
 		// Check all positions on the rotor
 		for (int i = 0; i <= 25; i++) {
-			if (scramble[i] == input) {
+			if (this->scramble[i] == input) {
 				// calculate rotations by subtracting it from the result, then doing a mod (and if the result of mod is negative, make it positive by cycling back around)
 				int result = (i - position) % 26;
 				if (result < 0) {
@@ -217,12 +221,12 @@ int Rotor::getPos() {
 void Rotor::UI_Notch()
 {
 	string temp;
-	cout << "What letter is the notch at: ";
-	getline(cin, temp);
-	char notch_Let = temp[0];
-	notch = lettersToNum(notch_Let);
 	while (1)
 	{
+		cout << "What letter is the notch at: ";
+		getline(cin, temp);
+		char notch_Let = temp[0];
+		notch = lettersToNum(notch_Let);
 		if (notch >= 0 && notch < 26)
 		{
 			this->notch = notch;
@@ -239,7 +243,6 @@ void Rotor::UI_Notch()
 void Rotor::UI_Scramble()
 {
 	char ctemp;
-	int itemp;
 	string sttemp;
 	for (int i = 0; i < 26; i++)
 	{
@@ -250,7 +253,7 @@ void Rotor::UI_Scramble()
 			getline(cin, sttemp);
 			ctemp = sttemp[0];
 			ctemp = toupper(ctemp);
-			itemp = lettersToNum(ctemp);
+			sttemp = ctemp;
 			try {
 				int value = stoi(sttemp);
 				cout << "Invalid input. Please enter a Letter." << endl;
@@ -263,14 +266,16 @@ void Rotor::UI_Scramble()
 		}
 		for (int j = 0; j < 26; j++)
 		{
-			if (itemp == scramble[j])
+			if (ctemp == this->scramble[j])
 			{
-				cout << ctemp << " is already attached" << endl;
+				cout << sttemp << " is already attached" << endl;
 				i--;
+				break;
 			}
-			if (j == 25)
+			else if (j == 25)
 			{
-				scramble[i] = itemp;
+				this->StrScm = this->StrScm + ctemp;
+				this->scramble[i] = lettersToNum(ctemp);
 			}
 		}
 		//Add stuff for dab
@@ -308,4 +313,11 @@ int lettersToNum(char letter) {
 		cout << "Error in function letterToNum: Input char (" << wrongChar << ") not in alphabet\n";
 		return 99;
 	}
+}
+
+Rotor::Rotor(int newScramble[], int newNotch) {
+	for (int i = 0; i <= 25; i++) {
+		this->scramble[i] = newScramble[i];
+	}
+	this->notch = newNotch;
 }

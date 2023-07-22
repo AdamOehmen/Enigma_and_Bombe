@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\ethan\source\repos\Enigma_and_Bombe\Enigma_and_Bombe;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>C:\Users\oehmena\source\repos\Enigma_and_Bombe\Enigma_and_Bombe;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -107,13 +107,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ethan\source\repos\Enigma_and_Bombe\Enigma_and_Bombe</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\oehmena\source\repos\Enigma_and_Bombe\Enigma_and_Bombe</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\ethan\source\repos\Enigma_and_Bombe\Enigma_and_Bombe\x64\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Plugboard.obj;Reflector.obj;Rotor.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\oehmena\source\repos\Enigma_and_Bombe\Enigma_and_Bombe;C:\Users\oehmena\source\repos\Enigma_and_Bombe\Enigma_and_Bombe</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Plugboard.obj;Reflector.obj;Rotor.obj;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
