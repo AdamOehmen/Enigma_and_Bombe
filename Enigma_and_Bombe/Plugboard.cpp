@@ -12,6 +12,37 @@ Plugboard::Plugboard()
 	}
 }
 
+void Plugboard::DB_Extract(string db_setting) {
+	int temp = 0;
+	// Extracts DB settings and stores into PlugLet
+	// Essentially createPlugboard() but pulls data from DB
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 10; j++) {
+			if (i == 0) {
+				PlugLet[j][i] = db_setting[temp];
+				temp = temp + 2;
+			}
+			else if (i == 1) {
+				PlugLet[j][i] = db_setting[temp + 1];
+				temp = temp + 2;
+			}
+		}
+		temp = 0;
+	}
+	// Converts Letters to Num
+	for (int i = 0; i < 10; i++){
+		for (int k = 0; k <= 25; k++) {
+			if (PlugLet[i][0] == let[k]) {
+				//return correct num for the input letter
+				PlugPos[i][0] = k;
+			}
+			if (PlugLet[i][1] == let[k]) {
+				//return correct num for the input letter
+				PlugPos[i][1] = k;
+			}
+		}
+	}
+}
 void Plugboard::createPlugboard()
 {
 	for (int i = 0; i < 10; i++)
@@ -23,22 +54,58 @@ void Plugboard::createPlugboard()
 		{
 			break;
 		}
-		PlugLet[i][0] = temp[0];
-		cout << "To where: ";
-		getline(cin, temp);
-		PlugLet[i][1] = temp[0];
-		PlugLet[i][0] = toupper(PlugLet[i][0]);
-		PlugLet[i][1] = toupper(PlugLet[i][1]);
-		for (int k = 0; k <= 25; k++) {
-			if (PlugLet[i][0] == let[k]) {
-				 //return correct num for the input letter
-				PlugPos[i][0] = k;
-			}
-			if (PlugLet[i][1] == let[k]) {
-				 //return correct num for the input letter
-				PlugPos[i][1] = k;
+		bool containsSpecialCharacters = false;
+		for (char c : temp) {
+			if (!isalpha(c)) { // Check if the character is an alphabet letter
+				containsSpecialCharacters = true;
+				break;
 			}
 		}
+		
+		if (containsSpecialCharacters) {
+			cout << "Invalid input. Please enter letters only." << endl << endl;
+			i--;
+		}
+		else {
+			// No special characters found, we can proceed
+
+			PlugLet[i][0] = temp[0];
+			cout << "To where: ";
+			getline(cin, temp);
+			for (char c : temp) {
+				if (!isalpha(c)) { // Check if the character is an alphabet letter
+					containsSpecialCharacters = true;
+					break;
+				}
+			}
+
+			if (containsSpecialCharacters) {
+				cout << "Invalid input. Please enter letters or words only." << endl << endl;
+				i--;
+			}
+			else {
+				// No special characters found, we can proceed
+				temp[0] = toupper(temp[0]);
+				PlugLet[i][1] = temp[0];
+			}
+		}
+		if (i == 0 && (PlugLet[0][0] == PlugLet[0][1]))
+		{
+			cout << "Plugs must go to different positions." << endl;
+			i--;
+		}
+		for (int k = 0; k <= i; k++)
+		{
+			for (int n = 0; n <= i; n++) {
+				if (PlugLet[n][0] == PlugLet[k][1] || k != n && (PlugLet[n][0] == PlugLet[k][0] || PlugLet[n][1] == PlugLet[k][1])) {
+					cout << "Plugs must go to different positions." << endl;
+					i--;
+					k = i;
+					break;
+				}
+			}
+		}
+		
 	}
 	/*
 	for (int i = 0; i < 2; i++) {
@@ -48,7 +115,17 @@ void Plugboard::createPlugboard()
 		cout << endl;
 	}
 	*/
-	cout << "test0";
+	//cout << "test0";
+}
+
+string Plugboard::returnPlugLet() {
+	string result = "";
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 2; j++) {
+			result = result + PlugLet[i][j];
+		}
+	}
+	return result;
 }
 
 int Plugboard::test_createPlugboard(int test_pos[10][2], char test_let[10][2])

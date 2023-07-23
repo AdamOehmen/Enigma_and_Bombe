@@ -1,10 +1,7 @@
-#ifndef functions
-#define functions
+#pragma once
 
 #include "pch.h"
-#include <iostream>
 #include <algorithm>
-using namespace std;
 
 char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
@@ -56,5 +53,3 @@ string delSpaces(string str) {  // delete spaces
 
 	return str;
 }
-
-#endif 
