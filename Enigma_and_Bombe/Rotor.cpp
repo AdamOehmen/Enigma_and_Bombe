@@ -266,7 +266,7 @@ void Rotor::UI_Scramble()
 		}
 		for (int j = 0; j < 26; j++)
 		{
-			if (ctemp == this->scramble[j])
+			if (lettersToNum(ctemp) == this->scramble[j])
 			{
 				cout << sttemp << " is already attached" << endl;
 				i--;
