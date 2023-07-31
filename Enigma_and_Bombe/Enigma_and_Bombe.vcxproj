@@ -24,6 +24,7 @@
     <ProjectGuid>{59b9809f-21cc-4ee4-982c-c8eff1f8c59f}</ProjectGuid>
     <RootNamespace>EnigmaandBombe</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Enigma</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
