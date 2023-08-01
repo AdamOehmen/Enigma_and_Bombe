@@ -1,16 +1,16 @@
-#include "../Enigma_and_Bombe/pch.h"
-#include "../Enigma_and_Bombe/Reflector.h"
-#include "../Enigma_and_Bombe/Plugboard.h"
-#include "../Enigma_and_Bombe/Rotor.h"
-#include "../Enigma_and_Bombe/functions.h"
-#include "../Enigma_and_Bombe/sqlite3.h"
+#include "../Enigma/pch.h"
+#include "../Enigma/Reflector.h"
+#include "../Enigma/Plugboard.h"
+#include "../Enigma/Rotor.h"
+#include "../Enigma/functions.h"
+#include "../Enigma/sqlite3.h"
 
 // return the rotors used for the given message number, as a string of format "#,#,#," where # is the rotor number in that slot
 string getRotorsUsed(int msgNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
 	int rc;
-	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	rc = sqlite3_open("../Enigma/enigma_bombe.db", &db);
 	if (rc != SQLITE_OK) {
 		cout << "Error opening db in getMessageRotorSettings" << endl;
 		exit(0);
@@ -62,7 +62,7 @@ string getPlugboardUsed(int msgNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
 	int rc;
-	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	rc = sqlite3_open("../Enigma/enigma_bombe.db", &db);
 	if (rc != SQLITE_OK) {
 		cout << "Error opening db in getMessagePlugboardUsed" << endl;
 		exit(0);
@@ -112,7 +112,7 @@ string getRotorScramble(int rotorNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
 	int rc;
-	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	rc = sqlite3_open("../Enigma/enigma_bombe.db", &db);
 
 	string query = "SELECT rotorSetting FROM Rotor_Settings WHERE rotorName = '" + to_string(rotorNum) + "'";
 
@@ -143,7 +143,7 @@ int getRotorNotch(int rotorNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
 	int rc;
-	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	rc = sqlite3_open("../Enigma/enigma_bombe.db", &db);
 
 	string query = "SELECT notch FROM Rotor_Settings WHERE rotorName = '" + to_string(rotorNum) + "'";
 
@@ -168,7 +168,7 @@ string getEncryptedMessage(int msgNum) {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
 	int rc;
-	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	rc = sqlite3_open("../Enigma/enigma_bombe.db", &db);
 	if (rc != SQLITE_OK) {
 		cout << "Error opening db in getEncryptedMessage" << endl;
 		exit(0);
@@ -203,7 +203,7 @@ int selectMessage() {
 	sqlite3* db;
 	sqlite3_stmt* stmt;
 	int rc;
-	rc = sqlite3_open("../Enigma_and_Bombe/enigma_bombe.db", &db);
+	rc = sqlite3_open("../Enigma/enigma_bombe.db", &db);
 	if (rc != SQLITE_OK) {
 		cout << "Error opening db in selectMessage" << endl;
 		exit(0);
