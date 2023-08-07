@@ -278,7 +278,7 @@ int main() //This is the main
 			{
 				ask_usr_set(settings);
 				plugset = pull_plug_set(settings[0]);
-				if (plugset.compare("Error") == 0)
+				if (plugset.compare("Er") == 0)
 				{
 					cout << "Please enter a valid Plugboard" << endl << endl;
 				}

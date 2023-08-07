@@ -43,6 +43,7 @@ string pull_rotor_set(int rotor) {
 	rc = sqlite3_step(stmt); // Execute the statement
 	if (rc != SQLITE_ROW) {
 		cout << "Rotor Doesn't exist" << endl;	// Check if plugboard exists
+		return "Er";
 	}
 
 	size_t length = strlen(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));  // calculate the length using reinterpret_cast since strlen expects a string
@@ -111,14 +112,21 @@ Rotor::Rotor()
 			cin >> this->rtrName;
 			cin.ignore();
 			this->scramble = pull_rotor_set(this->rtrName);
-			cout << "Setting is " << this->scramble << endl;
-			for (int i = 0; i < this->scramble.length(); i++)
+			if (this->scramble.compare("Er") == 0)
 			{
-				this->scramble[i] = lettersToNum(this->scramble[i]);
+				cout << "Please Enter a Valid Rotor Number" << endl;
 			}
-			this->notch = pull_rotor_notch(this->rtrName);
-			YN = 0;
-			break;
+			else
+			{
+				cout << "Setting is " << this->scramble << endl;
+				for (int i = 0; i < this->scramble.length(); i++)
+				{
+					this->scramble[i] = lettersToNum(this->scramble[i]);
+				}
+				this->notch = pull_rotor_notch(this->rtrName);
+				YN = 0;
+				break;
+			}
 		}
 		else if (ClearWhenAddingDataBase == "Y")
 		{
