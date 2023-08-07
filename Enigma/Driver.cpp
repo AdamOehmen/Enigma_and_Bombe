@@ -460,6 +460,9 @@ int main() //This is the main
 				lastRotated = false;
 			}
 		}
+
+		// Send input through plugboard again
+		plainNum[i] = plug.PlugSwitch(plainNum[i]);
 	}
 
 	// Print the final encrypted message

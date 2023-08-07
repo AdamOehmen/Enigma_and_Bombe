@@ -330,6 +330,9 @@ int main() {
 	{
 		cout << "Encrypted letter: " << numToLetter(plainNum[i]) << endl;
 
+		// Send through plugboard
+		plainNum[i] = plug.PlugSwitch(plainNum[i]);
+
 		// Send input through each rotor in sequence
 		for (int j = 0; j < numRotors; j++) {
 			plainNum[i] = rotors[j].getScramblePos(plainNum[i]);
@@ -343,7 +346,7 @@ int main() {
 			plainNum[i] = rotors[j].getReversePos(plainNum[i]);
 		}
 
-		// Send through plugboard
+		// Send through plugboard again
 		plainNum[i] = plug.PlugSwitch(plainNum[i]);
 
 		// Print final letter to screen
