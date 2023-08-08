@@ -306,7 +306,6 @@ int main() //This is the main
 			plug.createPlugboard();
 			plug.setPlugPos();
 			plug_store = plug.returnPlugLet();
-			cout << plug_store;
 			db_store("Plugboard_Settings");
 			plug_usr = plug_order;
 			// Create Rotors with user inputs 
