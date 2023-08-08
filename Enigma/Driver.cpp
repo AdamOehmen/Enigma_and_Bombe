@@ -307,6 +307,7 @@ int main() //This is the main
 			plug.setPlugPos();
 			plug_store = plug.returnPlugLet();
 			db_store("Plugboard_Settings");
+			plug_usr = plug_order;
 			// Create Rotors with user inputs 
 			// Reuse Below code
 			break;
