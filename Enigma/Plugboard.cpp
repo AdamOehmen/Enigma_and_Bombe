@@ -1,4 +1,5 @@
 #include "Plugboard.h"
+
 int PlugPos[10][2] = { {16, 3}, {9, 4}, {11, 15}, {17, 2}, {5, 24 }, { 8, 20}, {7, 22}, {6, 1}, {14, 23}, {18, 25 } };
 char PlugLet[10][2];
 string temp;
@@ -107,15 +108,17 @@ void Plugboard::createPlugboard()
 		}
 		
 	}
-	/*
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < 10; j++) {
-			cout << PlugLet[j][i] << " ";
+	
+	
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 2; j++) {
+			for (int k = 0; k <= 25; k++) {
+				if (PlugLet[i][j] == let[k]) {
+					PlugPos[i][j] = k;
+				}
+			}
 		}
-		cout << endl;
 	}
-	*/
-	//cout << "test0";
 }
 
 string Plugboard::returnPlugLet() {
